@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
+  X,
   ExternalLink,
   Star,
   Download,
