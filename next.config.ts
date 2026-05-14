@@ -4,6 +4,12 @@ const nextConfig: NextConfig = {
   compress: true,
   images: {
     formats: ["image/webp"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
+    ],
   },
   async headers() {
     return [

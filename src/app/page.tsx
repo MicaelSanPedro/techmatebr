@@ -2,7 +2,6 @@ import Link from "next/link";
 import { getAllPosts, getFeaturedPosts, getAllCategories } from "@/lib/posts";
 import { FeaturedPost } from "@/components/FeaturedPost";
 import { PostCard } from "@/components/PostCard";
-import { SearchBar } from "@/components/SearchBar";
 import {
   ArrowRight,
   Terminal,
@@ -14,6 +13,7 @@ import {
   Gamepad2,
   Sparkles,
   Zap,
+  Flame,
 } from "lucide-react";
 
 const categoryIcons: Record<string, React.ReactNode> = {
@@ -47,44 +47,52 @@ export default function HomePage() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 sm:pt-40 sm:pb-28 px-4">
+      <section className="relative pt-36 pb-24 sm:pt-44 sm:pb-32 px-4">
         <div className="max-w-4xl mx-auto text-center">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 mb-6">
-            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-            <span className="text-xs text-amber-400 font-medium">Blog Tech</span>
+          {/* Small label */}
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.08] mb-8">
+            <Flame className="w-3.5 h-3.5 text-amber-400" />
+            <span className="text-xs text-white/50 font-medium tracking-wide uppercase">
+              Tech Blog
+            </span>
           </div>
 
-          {/* Title */}
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-6 tracking-tight leading-tight">
-            <span className="text-white">Linux</span>
-            <span className="shimmer-text">Zeiro</span>
-            <br className="sm:hidden" />{" "}
-            <span className="text-white/40">Blog</span>
+          {/* Main title */}
+          <h1 className="mb-8 leading-[1.1]">
+            <span className="block text-5xl sm:text-6xl lg:text-7xl font-extrabold text-white tracking-tight">
+              Linux<span className="shimmer-text">Zeiro</span>
+            </span>
+            <span className="block mt-3 sm:mt-4 text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-white/60 via-white/40 to-white/20 bg-clip-text text-transparent">
+              Tutoriais, dicas e guias
+            </span>
           </h1>
 
-          {/* Subtitle */}
-          <p className="text-lg sm:text-xl text-white/35 max-w-2xl mx-auto leading-relaxed mb-10">
-            Tutoriais, guias e dicas sobre{" "}
-            <span className="text-amber-400/60">Linux</span>,{" "}
-            <span className="text-blue-400/60">Windows</span>,{" "}
-            <span className="text-emerald-400/60">dev</span> e{" "}
-            <span className="text-green-400/60">gaming</span>.
+          {/* Subtitle with colored keywords */}
+          <p className="text-base sm:text-lg text-white/30 max-w-xl mx-auto leading-relaxed">
+            Tudo sobre{" "}
+            <span className="text-amber-400/50 hover:text-amber-400 transition-colors cursor-default">Linux</span>
+            {", "}
+            <span className="text-blue-400/50 hover:text-blue-400 transition-colors cursor-default">Windows</span>
+            {", "}
+            <span className="text-emerald-400/50 hover:text-emerald-400 transition-colors cursor-default">desenvolvimento</span>
+            {" "}
+            e{" "}
+            <span className="text-green-400/50 hover:text-green-400 transition-colors cursor-default">gaming</span>
+            {" — com aquele toque de terminal."}
           </p>
 
-          {/* Search bar */}
-          <div className="max-w-xl mx-auto">
-            <SearchBar allPosts={allPosts} />
-          </div>
-
           {/* Quick stats */}
-          <div className="flex items-center justify-center gap-6 sm:gap-10 mt-10 text-sm text-white/25">
+          <div className="flex items-center justify-center gap-8 mt-10 text-sm text-white/20">
             <div className="flex items-center gap-1.5">
-              <Zap className="w-3.5 h-3.5 text-amber-400/50" />
+              <Sparkles className="w-3.5 h-3.5 text-amber-400/40" />
               <span>{allPosts.length} artigos</span>
             </div>
+            <div className="w-px h-4 bg-white/10" />
+            <span>{categories.length} categorias</span>
+            <div className="w-px h-4 bg-white/10" />
             <div className="flex items-center gap-1.5">
-              <span>{categories.length} categorias</span>
+              <Zap className="w-3.5 h-3.5 text-amber-400/40" />
+              <span>Atualizado semanalmente</span>
             </div>
           </div>
         </div>
@@ -97,7 +105,6 @@ export default function HomePage() {
             <div className="flex items-center gap-3 mb-8">
               <div className="w-1 h-6 rounded-full bg-amber-500" />
               <h2 className="text-xl font-bold text-white">Destaques</h2>
-              <span className="text-xs text-white/20 mt-0.5">Posts selecionados</span>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {featuredPosts.map((post) => (

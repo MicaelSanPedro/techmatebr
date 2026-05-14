@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Calendar, Clock, ArrowRight } from "lucide-react";
 import { CategoryBadge } from "@/components/CategoryBadge";
 import type { PostSummary } from "@/lib/posts";
@@ -9,15 +10,28 @@ interface FeaturedPostProps {
 
 export function FeaturedPost({ post }: FeaturedPostProps) {
   const { slug, frontmatter } = post;
+  const hasImage = frontmatter.coverImage?.startsWith("http");
 
   return (
     <Link href={`/blog/${slug}`} className="group block">
       <article className="relative rounded-2xl overflow-hidden border border-white/[0.06] transition-all duration-300 hover:border-amber-500/20 hover:shadow-[0_0_30px_rgba(249,189,24,0.1)]">
-        {/* Gradient background overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-amber-900/30 via-yellow-900/20 to-orange-900/10 pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent pointer-events-none" />
+        {/* Background image */}
+        {hasImage && (
+          <Image
+            src={frontmatter.coverImage}
+            alt={frontmatter.title}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, 50vw"
+            priority
+          />
+        )}
 
-        <div className="relative p-6 sm:p-8 md:p-10 flex flex-col justify-end min-h-[280px] sm:min-h-[340px]">
+        {/* Gradient overlays */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/70 to-[#0a0a0a]/30 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-br from-amber-900/20 to-transparent pointer-events-none" />
+
+        <div className="relative p-6 sm:p-8 md:p-10 flex flex-col justify-end min-h-[300px] sm:min-h-[360px]">
           {/* Category */}
           <div className="mb-4">
             <CategoryBadge category={frontmatter.category} />
@@ -36,7 +50,7 @@ export function FeaturedPost({ post }: FeaturedPostProps) {
           {/* Bottom row */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="flex items-center gap-4">
-              <div className="flex items-center gap-1.5 text-xs text-white/30">
+              <div className="flex items-center gap-1.5 text-xs text-white/40">
                 <Calendar className="w-3.5 h-3.5" />
                 <time dateTime={frontmatter.date}>
                   {new Date(frontmatter.date).toLocaleDateString("pt-BR", {
@@ -46,7 +60,7 @@ export function FeaturedPost({ post }: FeaturedPostProps) {
                   })}
                 </time>
               </div>
-              <div className="flex items-center gap-1.5 text-xs text-white/30">
+              <div className="flex items-center gap-1.5 text-xs text-white/40">
                 <Clock className="w-3.5 h-3.5" />
                 <span>{frontmatter.readTime}</span>
               </div>
