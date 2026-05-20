@@ -1,6 +1,6 @@
 import Link from "next/link";
-import Image from "next/image";
 import { Heart, Github, Twitter, ArrowUpRight } from "lucide-react";
+import { Logo } from "@/components/Logo";
 
 const categoryLinks = [
   { label: "Linux", href: "/blog?category=Linux" },
@@ -48,7 +48,7 @@ export function Footer() {
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/3 pointer-events-none select-none whitespace-nowrap overflow-hidden max-w-[100vw]">
         <span className="text-[22vw] sm:text-[16vw] lg:text-[10rem] font-extrabold leading-none tracking-tighter
                          bg-gradient-to-b from-white/[0.04] to-transparent bg-clip-text text-transparent">
-          LINUXZEIRO
+          TECHMATE
         </span>
       </div>
 
@@ -57,26 +57,14 @@ export function Footer() {
           {/* Brand */}
           <div className="col-span-2 lg:col-span-1">
             <Link href="/" className="flex items-center gap-2.5 mb-4 sm:mb-5 w-fit group">
-              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl overflow-hidden ring-1 ring-amber-400/30
-                              shadow-[0_0_24px_-6px_rgba(249,189,24,0.5)]
-                              group-hover:shadow-[0_0_32px_-4px_rgba(249,189,24,0.7)]
-                              transition-shadow">
-                <Image
-                  src="/logo.webp"
-                  alt="LinuxZeiro"
-                  width={40}
-                  height={40}
-                  className="w-full h-full object-cover"
-                />
-              </div>
+              <Logo className="w-9 h-9 sm:w-10 sm:h-10 transition-transform duration-300 group-hover:scale-105" glow />
               <span className="text-base sm:text-lg font-bold tracking-tight">
-                <span className="text-white">Linux</span>
-                <span className="shimmer-text">Zeiro</span>
+                <span className="text-white">Tech</span>
+                <span className="shimmer-text">Mate</span>
               </span>
             </Link>
             <p className="text-xs sm:text-sm text-white/40 leading-relaxed max-w-xs text-pretty">
-              Blog sobre Linux, open source, desenvolvimento e tecnologia. Tutoriais, dicas e guias
-              práticos para a comunidade brasileira.
+              Tech blog brasileiro sobre Linux, Windows, dev, gaming e segurança. Tutoriais honestos e dicas práticas, sem fluff.
             </p>
 
             {/* Social icons */}
@@ -173,11 +161,11 @@ export function Footer() {
         {/* Bottom copyright */}
         <div className="mt-10 sm:mt-14 pt-5 sm:pt-6 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 text-center sm:text-left">
           <p className="text-xs text-white/30">
-            © {currentYear} <span className="text-white/50">LinuxZeiro</span>. Todos os direitos reservados.
+            © {currentYear} <span className="text-white/50">TechMate</span>. Todos os direitos reservados.
           </p>
           <p className="text-xs text-white/30 flex items-center gap-1.5 flex-wrap justify-center">
-            Feito com <Heart className="w-3 h-3 text-amber-400 fill-amber-400 animate-pulse" /> e Linux para o
-            <span className="text-amber-300/70">Open Source</span>
+            Feito com <Heart className="w-3 h-3 text-amber-400 fill-amber-400 animate-pulse" /> e café pra galera
+            <span className="text-amber-300/70">tech BR</span>
           </p>
         </div>
       </div>

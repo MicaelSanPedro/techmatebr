@@ -43,13 +43,13 @@ export default function HomePage() {
           {/* Main title */}
           <h1 className="mb-5 sm:mb-7 leading-[0.95] text-balance animate-fade-up delay-1">
             <span className="block text-5xl sm:text-7xl lg:text-8xl font-extrabold tracking-tight">
-              <span className="gradient-text-muted">Linux</span>
-              <span className="shimmer-text">Zeiro</span>
+              <span className="gradient-text-muted">Tech</span>
+              <span className="shimmer-text">Mate</span>
             </span>
             <span className="block mt-3 sm:mt-5 text-xl sm:text-3xl lg:text-4xl font-semibold text-white/40 tracking-tight px-2">
-              Tutoriais, dicas & guias com{" "}
+              Seu parceiro em{" "}
               <span className="relative inline-block">
-                <span className="text-white/70">toque de terminal</span>
+                <span className="text-white/70">tech</span>
                 <span className="absolute -bottom-1 left-0 right-0 h-px bg-gradient-to-r from-transparent via-amber-400/50 to-transparent" />
               </span>
             </span>
@@ -57,7 +57,7 @@ export default function HomePage() {
 
           {/* Subtitle */}
           <p className="text-sm sm:text-base lg:text-lg text-white/40 max-w-2xl mx-auto leading-relaxed text-pretty animate-fade-up delay-2 px-2">
-            Tudo sobre{" "}
+            Tutoriais e dicas honestas sobre{" "}
             <span className="text-amber-300/80 font-medium">Linux</span>
             {", "}
             <span className="text-sky-300/80 font-medium">Windows</span>
@@ -65,7 +65,7 @@ export default function HomePage() {
             <span className="text-emerald-300/80 font-medium">desenvolvimento</span>
             {" "}e{" "}
             <span className="text-lime-300/80 font-medium">gaming</span>
-            {" — pra quem vive na linha de comando."}
+            {" — escrito por quem usa de verdade."}
           </p>
 
           {/* CTAs */}
@@ -224,7 +224,7 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto">
           <SectionHeader
             eyebrow="Quem tá por trás"
-            title="Sobre o LinuxZeiro"
+            title="Sobre o TechMate"
             subtitle="Um blog que nasceu do terminal"
           />
 
@@ -250,19 +250,19 @@ export default function HomePage() {
               <div className="space-y-3 sm:space-y-4 text-sm sm:text-base text-white/65 leading-relaxed text-pretty">
                 <p>
                   Faz um tempo que eu vivo enfiado em terminal, quebrando sistema, reinstalando distro,
-                  testando mod, tunando bios. Em algum momento eu pensei: <em className="text-white/85 not-italic">por que não escrever tudo isso?</em>
+                  testando mod, tunando BIOS. Em algum momento eu pensei: <em className="text-white/85 not-italic">por que não compartilhar tudo isso?</em>
                 </p>
                 <p>
-                  E foi assim que nasceu o <span className="text-amber-300 font-semibold">LinuxZeiro</span> —
+                  E foi assim que nasceu o <span className="text-amber-300 font-semibold">TechMate</span> —
                   um blog sem firula, sem fluff, sem &ldquo;10 maneiras de você ser mais produtivo!&rdquo;.
-                  Só tutorial honesto, dica que funciona e uma opinião quando precisa ter.
+                  Só tutorial honesto, dica que funciona e opinião quando precisa ter.
                 </p>
                 <p>
-                  Aqui você vai encontrar de tudo um pouco: <span className="text-amber-300/80">Linux</span>,
+                  Aqui você encontra de tudo um pouco: <span className="text-amber-300/80">Linux</span>,
                   {" "}<span className="text-sky-300/80">Windows</span>,
                   {" "}<span className="text-emerald-300/80">dev</span> e
                   {" "}<span className="text-lime-300/80">gaming</span>.
-                  Tudo escrito por quem usa de verdade, não por quem leu sobre.
+                  Conteúdo pra dev experiente e curioso entender — sem nivelar por baixo, sem complicar à toa.
                 </p>
               </div>
 

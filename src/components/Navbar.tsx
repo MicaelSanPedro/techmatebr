@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, X, ArrowRight, Search as SearchIcon } from "lucide-react";
+import { Logo } from "@/components/Logo";
 import { SearchBar } from "@/components/SearchBar";
 import type { PostSummary } from "@/lib/posts";
 
@@ -81,24 +81,12 @@ export function Navbar({ allPosts }: NavbarProps) {
           <div className="flex items-center justify-between h-14 sm:h-16 lg:h-[72px] gap-2">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 sm:gap-2.5 group shrink-0">
-              <div className="relative w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 rounded-xl overflow-hidden
-                              ring-1 ring-amber-400/30
-                              shadow-[0_0_24px_-4px_rgba(249,189,24,0.45)]
-                              group-hover:shadow-[0_0_32px_-2px_rgba(249,189,24,0.65)]
-                              group-hover:ring-amber-400/50
-                              transition-all duration-300">
-                <Image
-                  src="/logo.webp"
-                  alt="LinuxZeiro"
-                  width={40}
-                  height={40}
-                  className="w-full h-full object-cover"
-                  priority
-                />
+              <div className="relative transition-transform duration-300 group-hover:scale-105">
+                <Logo className="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10" glow />
               </div>
               <span className="text-base sm:text-lg lg:text-xl font-bold tracking-tight flex items-center">
-                <span className="text-white">Linux</span>
-                <span className="shimmer-text">Zeiro</span>
+                <span className="text-white">Tech</span>
+                <span className="shimmer-text">Mate</span>
               </span>
             </Link>
 

@@ -31,7 +31,7 @@ export async function generateMetadata({
   if (!post) return { title: "Artigo não encontrado" };
 
   return {
-    title: `${post.frontmatter.title} — LinuxZeiro`,
+    title: `${post.frontmatter.title} — TechMate`,
     description: post.frontmatter.excerpt,
     openGraph: {
       title: post.frontmatter.title,
@@ -123,7 +123,7 @@ export default async function PostPage({ params }: PostPageProps) {
                 <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-amber-400/40 to-amber-600/30 ring-1 ring-amber-400/30 flex items-center justify-center">
                   <User className="w-3.5 h-3.5 text-amber-200" />
                 </div>
-                <span className="font-medium text-white/75 text-sm">LinuxZeiro</span>
+                <span className="font-medium text-white/75 text-sm">TechMate</span>
               </div>
               <div className="w-px h-4 bg-white/10" />
               <div className="flex items-center gap-1.5 text-xs text-white/40 font-mono">

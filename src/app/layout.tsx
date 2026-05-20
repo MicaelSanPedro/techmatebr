@@ -30,22 +30,22 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "LinuxZeiro — Tech blog para devs e entusiastas",
+  title: "TechMate — Seu parceiro em tech",
   description:
-    "Tutoriais, dicas e guias sobre Linux, Windows, desenvolvimento, segurança e gaming. Com aquele toque de terminal.",
+    "Tutoriais, dicas e guias sobre Linux, Windows, desenvolvimento, segurança e gaming. Conteúdo honesto e prático, sem fluff.",
   keywords: [
+    "tech",
+    "tecnologia",
+    "tutoriais",
     "linux",
-    "apps",
-    "install",
-    "flatpak",
-    "snap",
-    "apt",
-    "pacman",
-    "guia",
-    "aplicativos",
-    "software",
-    "tech blog",
+    "windows",
     "desenvolvimento",
+    "programação",
+    "gaming",
+    "segurança",
+    "hardware",
+    "open source",
+    "tech blog brasil",
   ],
   icons: {
     icon: [
@@ -68,23 +68,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${jetbrainsMono.variable} font-[family-name:var(--font-geist-sans)] antialiased`}
       >
-        {/* ─── Layered background ─── */}
-        <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_#15110a_0%,_#0a0908_50%,_#06060a_100%)]" />
-
-          <div className="ambient-orb animate-orb-1 w-[520px] h-[520px] top-[-160px] left-[-120px] bg-amber-500/[0.18]" />
-          <div className="ambient-orb animate-orb-2 w-[640px] h-[640px] top-[30%] right-[-200px] bg-orange-500/[0.10]" />
-          <div className="ambient-orb animate-orb-3 w-[420px] h-[420px] bottom-[-60px] left-[28%] bg-rose-500/[0.06]" />
-          <div className="ambient-orb animate-orb-1 w-[360px] h-[360px] top-[55%] left-[10%] bg-yellow-500/[0.05]" />
-
-          <div className="absolute inset-0 grid-bg" />
-
-          <div className="absolute inset-0 noise-overlay" />
-
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80vw] h-[60vh] bg-[radial-gradient(ellipse_at_top,_rgba(249,189,24,0.10),_transparent_60%)]" />
-
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_transparent_40%,_rgba(0,0,0,0.6)_100%)]" />
-        </div>
+        <div className="site-backdrop" aria-hidden />
 
         <div className="relative z-10 min-h-screen flex flex-col">
           <Navbar allPosts={allPosts} />
