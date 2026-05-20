@@ -2,13 +2,16 @@ import Link from "next/link";
 import { getAllPosts, getFeaturedPosts, getAllCategories } from "@/lib/posts";
 import { FeaturedPost } from "@/components/FeaturedPost";
 import { PostCard } from "@/components/PostCard";
-import { NewsletterForm } from "@/components/NewsletterForm";
 import { CategoryCard } from "@/components/CategoryCard";
 import {
   ArrowRight,
   Sparkles,
   Zap,
-  Rss,
+  Github,
+  Coffee,
+  Heart,
+  Terminal,
+  Code2,
 } from "lucide-react";
 
 export default function HomePage() {
@@ -216,34 +219,129 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ─────────── Newsletter ─────────── */}
-      <section className="cv-auto px-4 pb-20 sm:pb-28">
-        <div className="max-w-4xl mx-auto">
-          <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-white/[0.08] p-6 sm:p-10 lg:p-12 text-center
-                          bg-gradient-to-br from-amber-500/[0.08] via-white/[0.02] to-rose-500/[0.04]">
-            {/* Decorative orbs */}
-            <div className="absolute -top-32 -left-32 w-60 h-60 sm:w-72 sm:h-72 bg-amber-500/20 rounded-full blur-3xl pointer-events-none" />
-            <div className="absolute -bottom-32 -right-32 w-60 h-60 sm:w-72 sm:h-72 bg-rose-500/10 rounded-full blur-3xl pointer-events-none" />
+      {/* ─────────── Sobre ─────────── */}
+      <section className="cv-auto px-4 pb-20 sm:pb-28" id="sobre">
+        <div className="max-w-6xl mx-auto">
+          <SectionHeader
+            eyebrow="Quem tá por trás"
+            title="Sobre o LinuxZeiro"
+            subtitle="Um blog que nasceu do terminal"
+          />
 
-            <div className="relative">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 mb-4 sm:mb-5">
-                <Rss className="w-3 h-3 text-amber-300" />
-                <span className="text-[10px] sm:text-[11px] text-amber-300 font-medium tracking-wider uppercase">
-                  Newsletter
-                </span>
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 sm:gap-5">
+            {/* Card principal — Sobre o autor */}
+            <div className="lg:col-span-3 relative overflow-hidden rounded-2xl sm:rounded-3xl border border-white/[0.08] p-6 sm:p-8 lg:p-10
+                            bg-gradient-to-br from-amber-500/[0.08] via-white/[0.02] to-transparent">
+              <div className="flex items-start gap-4 mb-6">
+                <div className="shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-amber-400/30 to-amber-600/20 border border-amber-400/30 flex items-center justify-center
+                                shadow-[0_8px_24px_-8px_rgba(249,189,24,0.5)]">
+                  <Terminal className="w-7 h-7 sm:w-8 sm:h-8 text-amber-200" />
+                </div>
+                <div>
+                  <div className="text-[10px] sm:text-[11px] font-mono text-amber-300/80 uppercase tracking-wider mb-1">
+                    <span className="text-amber-400">❯</span> whoami
+                  </div>
+                  <h3 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+                    Oi, eu sou o Micael
+                  </h3>
+                </div>
               </div>
-              <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-3 tracking-tight text-balance">
-                Receba os melhores artigos no seu inbox
-              </h3>
-              <p className="text-sm sm:text-base text-white/50 mb-6 sm:mb-7 max-w-md mx-auto text-pretty">
-                Sem spam, sem fluff. Só tutoriais práticos e dicas pra dev que vive no terminal.
-              </p>
 
-              <NewsletterForm />
+              <div className="space-y-3 sm:space-y-4 text-sm sm:text-base text-white/65 leading-relaxed text-pretty">
+                <p>
+                  Faz um tempo que eu vivo enfiado em terminal, quebrando sistema, reinstalando distro,
+                  testando mod, tunando bios. Em algum momento eu pensei: <em className="text-white/85 not-italic">por que não escrever tudo isso?</em>
+                </p>
+                <p>
+                  E foi assim que nasceu o <span className="text-amber-300 font-semibold">LinuxZeiro</span> —
+                  um blog sem firula, sem fluff, sem &ldquo;10 maneiras de você ser mais produtivo!&rdquo;.
+                  Só tutorial honesto, dica que funciona e uma opinião quando precisa ter.
+                </p>
+                <p>
+                  Aqui você vai encontrar de tudo um pouco: <span className="text-amber-300/80">Linux</span>,
+                  {" "}<span className="text-sky-300/80">Windows</span>,
+                  {" "}<span className="text-emerald-300/80">dev</span> e
+                  {" "}<span className="text-lime-300/80">gaming</span>.
+                  Tudo escrito por quem usa de verdade, não por quem leu sobre.
+                </p>
+              </div>
 
-              <p className="mt-4 text-[11px] text-white/25">
-                100% gratuito · cancele quando quiser
-              </p>
+              <div className="mt-7 sm:mt-8 flex flex-wrap gap-3">
+                <a
+                  href="https://github.com/MicaelSanPedro"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-secondary"
+                >
+                  <Github className="w-4 h-4" />
+                  @MicaelSanPedro
+                </a>
+                <Link href="/blog" className="btn-primary">
+                  Ver os artigos
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
+            </div>
+
+            {/* Coluna lateral — 3 cards empilhados */}
+            <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4 sm:gap-5">
+              {/* Stack do site */}
+              <div className="relative overflow-hidden rounded-2xl border border-white/[0.07] p-5 sm:p-6
+                              bg-gradient-to-br from-emerald-500/[0.08] via-white/[0.015] to-transparent">
+                <div className="flex items-center gap-2.5 mb-3">
+                  <div className="w-9 h-9 rounded-xl bg-emerald-500/15 border border-emerald-400/25 flex items-center justify-center">
+                    <Code2 className="w-4 h-4 text-emerald-300" />
+                  </div>
+                  <span className="text-[10px] font-mono text-emerald-300/80 uppercase tracking-wider">
+                    Stack
+                  </span>
+                </div>
+                <h4 className="text-lg font-bold text-white mb-2 tracking-tight">
+                  Como foi feito
+                </h4>
+                <p className="text-sm text-white/55 leading-relaxed">
+                  Next.js 16, Tailwind v4, TypeScript e markdown puro. Hospedado na Vercel.
+                  Tudo open source no GitHub.
+                </p>
+              </div>
+
+              {/* Contribuir */}
+              <div className="relative overflow-hidden rounded-2xl border border-white/[0.07] p-5 sm:p-6
+                              bg-gradient-to-br from-sky-500/[0.08] via-white/[0.015] to-transparent">
+                <div className="flex items-center gap-2.5 mb-3">
+                  <div className="w-9 h-9 rounded-xl bg-sky-500/15 border border-sky-400/25 flex items-center justify-center">
+                    <Heart className="w-4 h-4 text-sky-300" />
+                  </div>
+                  <span className="text-[10px] font-mono text-sky-300/80 uppercase tracking-wider">
+                    Contribuir
+                  </span>
+                </div>
+                <h4 className="text-lg font-bold text-white mb-2 tracking-tight">
+                  Achou um typo?
+                </h4>
+                <p className="text-sm text-white/55 leading-relaxed">
+                  Manda PR no GitHub ou abre uma issue. Quem ajuda entra na próxima patch notes 😄
+                </p>
+              </div>
+
+              {/* Café */}
+              <div className="relative overflow-hidden rounded-2xl border border-white/[0.07] p-5 sm:p-6 sm:col-span-2 lg:col-span-1
+                              bg-gradient-to-br from-rose-500/[0.08] via-white/[0.015] to-transparent">
+                <div className="flex items-center gap-2.5 mb-3">
+                  <div className="w-9 h-9 rounded-xl bg-rose-500/15 border border-rose-400/25 flex items-center justify-center">
+                    <Coffee className="w-4 h-4 text-rose-300" />
+                  </div>
+                  <span className="text-[10px] font-mono text-rose-300/80 uppercase tracking-wider">
+                    Sem ads
+                  </span>
+                </div>
+                <h4 className="text-lg font-bold text-white mb-2 tracking-tight">
+                  Movido a café
+                </h4>
+                <p className="text-sm text-white/55 leading-relaxed">
+                  Sem trackers invasivos, sem popup de cookie. Só conteúdo. Bem old-school mesmo.
+                </p>
+              </div>
             </div>
           </div>
         </div>
