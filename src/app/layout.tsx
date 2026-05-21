@@ -4,6 +4,7 @@ import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { PageTransition } from "@/components/PageTransition";
+import { ScrollRevealInit } from "@/components/ScrollRevealInit";
 import { getAllPosts } from "@/lib/posts";
 
 const geistSans = Geist({
@@ -84,6 +85,7 @@ export default function RootLayout({
         </div>
 
         <div className="relative z-10 min-h-screen flex flex-col">
+          <ScrollRevealInit />
           <Navbar allPosts={allPosts} />
           <main className="flex-1">
             <PageTransition>{children}</PageTransition>

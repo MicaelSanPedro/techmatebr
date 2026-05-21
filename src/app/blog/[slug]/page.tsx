@@ -160,7 +160,7 @@ export default async function PostPage({ params }: PostPageProps) {
 
         {/* Cover image */}
         {hasCover && (
-          <div className="relative aspect-[16/9] rounded-xl sm:rounded-2xl overflow-hidden mb-10 sm:mb-12 border border-white/[0.06] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)] animate-fade-up delay-1">
+          <div className="relative aspect-[16/9] rounded-xl sm:rounded-2xl overflow-hidden mb-10 sm:mb-12 border border-white/[0.06] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)]" data-scroll-reveal>
             <Image
               src={frontmatter.coverImage}
               alt={frontmatter.title}
@@ -183,7 +183,7 @@ export default async function PostPage({ params }: PostPageProps) {
         />
 
         {/* End-of-article callout */}
-        <div className="mt-12 sm:mt-16 p-5 sm:p-8 rounded-2xl border border-amber-400/15 bg-gradient-to-br from-amber-500/[0.06] to-transparent">
+        <div className="mt-12 sm:mt-16 p-5 sm:p-8 rounded-2xl border border-amber-400/15 bg-gradient-to-br from-amber-500/[0.06] to-transparent" data-scroll-reveal>
           <p className="text-xs sm:text-sm text-amber-200/80 font-semibold mb-1 tracking-wide uppercase">
             Curtiu?
           </p>
@@ -218,7 +218,7 @@ export default async function PostPage({ params }: PostPageProps) {
 
       {/* Related posts */}
       {related.length > 0 && (
-        <section className="max-w-7xl mx-auto mt-20 sm:mt-24">
+        <section className="max-w-7xl mx-auto mt-20 sm:mt-24" data-scroll-reveal>
           <div className="mb-8 sm:mb-12 max-w-3xl">
             <div className="flex items-center gap-2 mb-3">
               <span className="w-5 sm:w-6 h-px bg-gradient-to-r from-amber-400 to-transparent" />
@@ -231,8 +231,10 @@ export default async function PostPage({ params }: PostPageProps) {
             </h2>
           </div>
           <div className="cv-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
-            {related.map((p) => (
-              <PostCard key={p.slug} post={p} />
+            {related.map((p, i) => (
+              <div key={p.slug} data-scroll-reveal data-scroll-delay={`${i * 100}`}>
+                <PostCard post={p} />
+              </div>
             ))}
           </div>
         </section>

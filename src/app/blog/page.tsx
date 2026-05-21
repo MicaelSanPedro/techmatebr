@@ -89,7 +89,8 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
             {filteredPosts.map((post, i) => (
               <div
                 key={post.slug}
-                className={`animate-fade-up delay-${Math.min(i, 6)}`}
+                data-scroll-reveal
+                data-scroll-delay={`${Math.min(i, 6) * 80}`}
               >
                 <PostCard post={post} />
               </div>

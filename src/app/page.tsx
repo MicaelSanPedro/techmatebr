@@ -103,7 +103,7 @@ export default function HomePage() {
 
       {/* ─────────── Featured Bento ─────────── */}
       {mainFeatured && (
-        <section className="cv-auto px-4 pb-16 sm:pb-20 lg:pb-24">
+        <section className="cv-auto px-4 pb-16 sm:pb-20 lg:pb-24" data-scroll-reveal>
           <div className="max-w-7xl mx-auto">
             <SectionHeader
               eyebrow="Em destaque"
@@ -113,7 +113,7 @@ export default function HomePage() {
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
               {/* Main featured (2 cols) */}
-              <div className="lg:col-span-2 animate-fade-up delay-1">
+              <div className="lg:col-span-2">
                 <FeaturedPost post={mainFeatured} variant="hero" />
               </div>
 
@@ -121,13 +121,13 @@ export default function HomePage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4 sm:gap-5 lg:gap-6">
                 {sideFeatured.length > 0 ? (
                   sideFeatured.map((post, i) => (
-                    <div key={post.slug} className={`animate-fade-up delay-${i + 2}`}>
+                    <div key={post.slug} data-scroll-reveal data-scroll-delay={`${(i + 1) * 100}`}>
                       <FeaturedPost post={post} variant="compact" />
                     </div>
                   ))
                 ) : (
                   recentPosts.slice(0, 2).map((post, i) => (
-                    <div key={post.slug} className={`animate-fade-up delay-${i + 2}`}>
+                    <div key={post.slug} data-scroll-reveal data-scroll-delay={`${(i + 1) * 100}`}>
                       <FeaturedPost post={post} variant="compact" />
                     </div>
                   ))
@@ -140,7 +140,7 @@ export default function HomePage() {
 
       {/* ─────────── Categories ─────────── */}
       {categories.length > 0 && (
-        <section className="cv-auto px-4 pb-16 sm:pb-20 lg:pb-24" id="categories">
+        <section className="cv-auto px-4 pb-16 sm:pb-20 lg:pb-24" id="categories" data-scroll-reveal>
           <div className="max-w-7xl mx-auto">
             <SectionHeader
               eyebrow="Por tema"
@@ -154,7 +154,7 @@ export default function HomePage() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5">
                   {/* Featured big card (left) */}
                   {featuredCat && (
-                    <div className="animate-fade-up delay-0">
+                    <div data-scroll-reveal>
                       <CategoryCard
                         name={featuredCat.name}
                         count={featuredCat.count}
@@ -169,7 +169,8 @@ export default function HomePage() {
                     {restCats.map((cat, i) => (
                       <div
                         key={cat.name}
-                        className={`animate-fade-up delay-${Math.min(i + 1, 6)}`}
+                        data-scroll-reveal
+                        data-scroll-delay={`${Math.min(i + 1, 6) * 80}`}
                       >
                         <CategoryCard
                           name={cat.name}
@@ -188,7 +189,7 @@ export default function HomePage() {
       )}
 
       {/* ─────────── Recent Posts ─────────── */}
-      <section className="cv-auto px-4 pb-20 sm:pb-24">
+      <section className="cv-auto px-4 pb-20 sm:pb-24" data-scroll-reveal>
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between mb-8 sm:mb-12 gap-3 sm:gap-4">
             <SectionHeader
@@ -210,7 +211,8 @@ export default function HomePage() {
             {recentPosts.map((post, i) => (
               <div
                 key={post.slug}
-                className={`animate-fade-up delay-${Math.min(i, 6)}`}
+                data-scroll-reveal
+                data-scroll-delay={`${Math.min(i, 6) * 80}`}
               >
                 <PostCard post={post} />
               </div>
@@ -220,7 +222,7 @@ export default function HomePage() {
       </section>
 
       {/* ─────────── Sobre ─────────── */}
-      <section className="cv-auto px-4 pb-20 sm:pb-28" id="sobre">
+      <section className="cv-auto px-4 pb-20 sm:pb-28" id="sobre" data-scroll-reveal>
         <div className="max-w-6xl mx-auto">
           <SectionHeader
             eyebrow="Quem tá por trás"
@@ -284,7 +286,7 @@ export default function HomePage() {
             </div>
 
             {/* Coluna lateral — 3 cards empilhados */}
-            <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4 sm:gap-5">
+            <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4 sm:gap-5" data-scroll-reveal data-scroll-delay="150">
               {/* Stack do site */}
               <div className="relative overflow-hidden rounded-2xl border border-white/[0.07] p-5 sm:p-6
                               bg-gradient-to-br from-emerald-500/[0.08] via-white/[0.015] to-transparent">
