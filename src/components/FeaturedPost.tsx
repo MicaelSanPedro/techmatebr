@@ -158,9 +158,10 @@ export function FeaturedPost({ post, variant = "hero" }: FeaturedPostProps) {
             </div>
 
             <span className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full
-                             bg-white/[0.05] border border-white/[0.1]
-                             text-sm font-medium text-amber-200 w-full sm:w-auto
-                             group-hover:bg-amber-500/15 group-hover:border-amber-400/40 group-hover:text-amber-100
+                             bg-amber-500/20 border border-amber-400/30
+                             text-sm font-semibold text-amber-100 w-full sm:w-auto
+                             backdrop-blur-sm
+                             group-hover:bg-amber-500/30 group-hover:border-amber-400/50 group-hover:text-white
                              transition-all duration-300">
               Ler artigo
               <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />

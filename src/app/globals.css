@@ -620,12 +620,14 @@
 .prose-custom table {
   width: 100%;
   border-collapse: collapse;
-  margin: 1.5em 0;
-  font-size: 0.875rem;
+  margin: 1.5em -0.5rem;
+  font-size: 0.8rem;
   border: 1px solid rgba(249, 189, 24, 0.12);
   border-radius: 0.75rem;
   background: rgba(255,255,255,0.015);
-  overflow: hidden;
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 .prose-custom table thead { }
 .prose-custom table tbody { }
@@ -633,11 +635,11 @@
 .prose-custom table th, .prose-custom table td { }
 .prose-custom th {
   text-align: left;
-  padding: 0.8em 1em;
+  padding: 0.6em 0.75em;
   background: rgba(249, 189, 24, 0.08);
   color: #fbbf24;
   font-weight: 600;
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   border-bottom: 1px solid rgba(249, 189, 24, 0.18);
@@ -646,12 +648,11 @@
 .prose-custom th:first-child { }
 .prose-custom th:last-child { }
 .prose-custom td {
-  padding: 0.7em 1em;
+  padding: 0.5em 0.75em;
   border-bottom: 1px solid rgba(255,255,255,0.04);
   color: rgba(236, 232, 223, 0.78);
-  white-space: nowrap;
   text-align: center;
-  font-size: 0.875rem;
+  font-size: 0.8rem;
 }
 .prose-custom td:first-child, .prose-custom th:first-child {
   text-align: left;
