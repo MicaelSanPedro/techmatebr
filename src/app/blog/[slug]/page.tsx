@@ -178,7 +178,7 @@ export default async function PostPage({ params }: PostPageProps) {
 
         {/* Post content */}
         <div
-          className="prose-custom animate-fade-in"
+          className="prose-custom"
           dangerouslySetInnerHTML={{ __html: contentHtml }}
         />
 

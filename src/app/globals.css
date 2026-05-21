@@ -325,6 +325,63 @@
   filter: blur(0);
 }
 
+/* ─── Prose auto-reveal (blog content) ───── */
+.prose-custom.revealed,
+.prose-custom.revealed > * {
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
+}
+.prose-custom > h2,
+.prose-custom > h3,
+.prose-custom > h4,
+.prose-custom > pre,
+.prose-custom > img,
+.prose-custom > hr,
+.prose-custom > table {
+  opacity: 0;
+  transform: translateY(20px);
+  filter: blur(5px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.prose-custom > h2.revealed,
+.prose-custom > h3.revealed,
+.prose-custom > h4.revealed,
+.prose-custom > pre.revealed,
+.prose-custom > img.revealed,
+.prose-custom > hr.revealed,
+.prose-custom > table.revealed {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+.prose-custom > blockquote {
+  opacity: 0;
+  transform: translateX(-12px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.prose-custom > blockquote.revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+.prose-custom > p,
+.prose-custom > ul,
+.prose-custom > ol {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.prose-custom > p.revealed,
+.prose-custom > ul.revealed,
+.prose-custom > ol.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 /* ─── Page Transition ─────────────────────── */
 @keyframes page-enter {
   0% {
