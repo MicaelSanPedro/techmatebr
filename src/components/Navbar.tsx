@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, ArrowRight, Search as SearchIcon } from "lucide-react";
@@ -24,6 +24,41 @@ export function Navbar({ allPosts }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [categoriesInView, setCategoriesInView] = useState(false);
   const pathname = usePathname();
+
+  // ── Sliding indicator refs ──
+  const pillRefs = useRef<Map<string, HTMLAnchorElement>>(new Map());
+  const indicatorRef = useRef<HTMLSpanElement>(null);
+  const navRef = useRef<HTMLDivElement>(null);
+
+  const updateIndicator = useCallback(() => {
+    const activeLink = navLinks.find((l) => isActive(l.href));
+    if (!activeLink || !indicatorRef.current || !navRef.current) return;
+
+    const el = pillRefs.current.get(activeLink.href);
+    if (!el) return;
+
+    const navRect = navRef.current.getBoundingClientRect();
+    const pillRect = el.getBoundingClientRect();
+
+    indicatorRef.current.style.transform = `translateX(${pillRect.left - navRect.left}px)`;
+    indicatorRef.current.style.width = `${pillRect.width}px`;
+    indicatorRef.current.style.opacity = "1";
+  }, [categoriesInView, pathname]);
+
+  useEffect(() => {
+    updateIndicator();
+  }, [updateIndicator]);
+
+  // Re-measure on resize
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        updateIndicator();
+      }
+    };
+    window.addEventListener("resize", handleResize, { passive: true });
+    return () => window.removeEventListener("resize", handleResize);
+  }, [updateIndicator]);
 
   useEffect(() => {
     let ticking = false;
@@ -91,6 +126,8 @@ export function Navbar({ allPosts }: NavbarProps) {
     return pathname.startsWith(href);
   }
 
+  const activeLabel = navLinks.find((l) => isActive(l.href))?.label ?? "";
+
   return (
     <>
       <nav
@@ -111,22 +148,33 @@ export function Navbar({ allPosts }: NavbarProps) {
 
             {/* Desktop Navigation (center) */}
             <div className="hidden md:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
-              <div className="flex items-center gap-1 p-1 rounded-full bg-white/[0.03] border border-white/[0.06]">
+              <div
+                ref={navRef}
+                className="relative flex items-center gap-1 p-1 rounded-full bg-white/[0.03] border border-white/[0.06]"
+              >
+                {/* ── Sliding active indicator ── */}
+                <span
+                  ref={indicatorRef}
+                  aria-hidden="true"
+                  className="absolute top-1 left-1 h-[calc(100%-8px)] rounded-full bg-gradient-to-b from-amber-500/25 to-amber-500/5 border border-amber-400/30 shadow-[0_4px_20px_-8px_rgba(249,189,24,0.5)] transition-all duration-300 ease-out pointer-events-none opacity-0"
+                  style={{ willChange: "transform, width" }}
+                />
+
                 {navLinks.map((link) => {
                   const active = isActive(link.href);
                   return (
                     <Link
                       key={link.href}
                       href={link.href}
-                      className={`relative px-4 py-1.5 text-sm font-medium rounded-full transition-all duration-300 ${
+                      ref={(el) => {
+                        if (el) pillRefs.current.set(link.href, el);
+                      }}
+                      className={`relative px-4 py-1.5 text-sm font-medium rounded-full transition-colors duration-300 ${
                         active
                           ? "text-amber-100"
                           : "text-white/55 hover:text-white"
                       }`}
                     >
-                      {active && (
-                        <span className="absolute inset-0 rounded-full bg-gradient-to-b from-amber-500/25 to-amber-500/5 border border-amber-400/30 -z-0" />
-                      )}
                       <span className="relative z-10">{link.label}</span>
                     </Link>
                   );
