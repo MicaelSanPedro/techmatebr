@@ -1,5 +1,7 @@
+import { Suspense } from "react";
 import { getAllPosts, getAllCategories } from "@/lib/posts";
 import { PostCard } from "@/components/PostCard";
+import { CategoryFilter } from "@/components/CategoryFilter";
 import { Search, Layers } from "lucide-react";
 import Link from "next/link";
 
@@ -52,36 +54,9 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
         </div>
 
         {/* ── Filter pills (scroll horizontal no mobile) ── */}
-        <div className="flex gap-2 mb-10 sm:mb-12 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap animate-fade-up delay-1 scrollbar-thin">
-          <Link
-            href="/blog"
-            className={`shrink-0 px-3.5 sm:px-4 py-2 rounded-full text-sm font-medium transition-all ${
-              !selectedCategory
-                ? "bg-gradient-to-b from-amber-500/25 to-amber-500/10 text-amber-100 border border-amber-400/40 shadow-[0_4px_20px_-8px_rgba(249,189,24,0.5)]"
-                : "bg-white/[0.03] text-white/55 border border-white/[0.06] hover:text-white hover:border-white/15 hover:bg-white/[0.05]"
-            }`}
-          >
-            Todos
-            <span className="ml-1.5 text-xs opacity-60 font-mono">({allPosts.length})</span>
-          </Link>
-          {categories.map((cat) => {
-            const active = selectedCategory === cat.name;
-            return (
-              <Link
-                key={cat.name}
-                href={`/blog?category=${encodeURIComponent(cat.name)}`}
-                className={`shrink-0 px-3.5 sm:px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                  active
-                    ? "bg-gradient-to-b from-amber-500/25 to-amber-500/10 text-amber-100 border border-amber-400/40 shadow-[0_4px_20px_-8px_rgba(249,189,24,0.5)]"
-                    : "bg-white/[0.03] text-white/55 border border-white/[0.06] hover:text-white hover:border-white/15 hover:bg-white/[0.05]"
-                }`}
-              >
-                {cat.name}
-                <span className="ml-1.5 text-xs opacity-60 font-mono">({cat.count})</span>
-              </Link>
-            );
-          })}
-        </div>
+        <Suspense>
+          <CategoryFilter categories={categories} totalPosts={allPosts.length} />
+        </Suspense>
 
         {/* ── Posts Grid ── */}
         {filteredPosts.length > 0 ? (
