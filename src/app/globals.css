@@ -563,13 +563,18 @@
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23fbbf24' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17L17 7'/%3E%3Cpath d='M7 7h10v10'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: center;
-  opacity: 0.5;
+  opacity: 0.85;
   transition: opacity 0.2s, transform 0.2s;
   vertical-align: middle;
 }
 .prose-custom a:hover::after {
   opacity: 1;
   transform: translate(2px, -2px);
+}
+@media (hover: none) {
+  .prose-custom a::after {
+    opacity: 1;
+  }
 }
 .prose-custom strong { color: #fff; font-weight: 600; }
 .prose-custom ul, .prose-custom ol { margin-bottom: 1.25em; padding-left: 1.5em; }
@@ -623,22 +628,22 @@
   font-size: 0.7rem;
   font-family: inherit;
   cursor: pointer;
-  opacity: 0;
-  transition: opacity 0.2s, background 0.2s, color 0.2s, border-color 0.2s;
+  opacity: 1;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
   backdrop-filter: blur(8px);
   z-index: 2;
-}
-.prose-custom pre:hover .copy-btn,
-.prose-custom pre .copy-btn:focus-visible {
-  opacity: 1;
 }
 .prose-custom pre .copy-btn:hover {
   background: rgba(249, 189, 24, 0.15);
   color: #fbbf24;
   border-color: rgba(249, 189, 24, 0.4);
 }
-.prose-custom pre .copy-btn .check-icon {
+.prose-custom pre .copy-btn .check-icon,
+.prose-custom pre .copy-btn .copied-label {
   display: none;
+}
+.prose-custom pre .copy-btn .copy-label {
+  display: inline;
 }
 .prose-custom pre .copy-btn.copied {
   opacity: 1;
@@ -646,11 +651,41 @@
   border-color: rgba(52, 211, 153, 0.4);
   color: #34d399;
 }
-.prose-custom pre .copy-btn.copied .copy-icon {
+.prose-custom pre .copy-btn.copied .copy-icon,
+.prose-custom pre .copy-btn.copied .copy-label {
   display: none;
 }
-.prose-custom pre .copy-btn.copied .check-icon {
-  display: block;
+.prose-custom pre .copy-btn.copied .check-icon,
+.prose-custom pre .copy-btn.copied .copied-label {
+  display: inline;
+}
+
+/* ─── Copy Toast Notification ───────────────── */
+.copy-toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.2rem;
+  border-radius: 9999px;
+  background: rgba(52, 211, 153, 0.15);
+  border: 1px solid rgba(52, 211, 153, 0.35);
+  color: #34d399;
+  font-size: 0.85rem;
+  font-weight: 500;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.copy-toast.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
 }
 .prose-custom img {
   border-radius: 0.85rem;
