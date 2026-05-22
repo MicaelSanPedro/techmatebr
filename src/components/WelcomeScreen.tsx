@@ -1,24 +1,15 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { Logo } from "./Logo";
-
-const STORAGE_KEY = "techmate_welcomed";
 
 export function WelcomeScreen() {
   const [isVisible, setIsVisible] = useState(false);
-  const [phase, setPhase] = useState<"enter" | "hold" | "exit">("enter");
+  const [phase, setPhase] = useState<"enter" | "exit">("enter");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // Only run on client
     setMounted(true);
-
-    // Check if user has already visited
-    const hasVisited = localStorage.getItem(STORAGE_KEY);
-    if (hasVisited) return; // Returning user — do nothing
-
-    // New user — show welcome
     setIsVisible(true);
   }, []);
 
@@ -27,7 +18,6 @@ export function WelcomeScreen() {
 
     const exitTimer = setTimeout(() => setPhase("exit"), 1000);
     const doneTimer = setTimeout(() => {
-      localStorage.setItem(STORAGE_KEY, "true");
       setIsVisible(false);
     }, 1600);
 
