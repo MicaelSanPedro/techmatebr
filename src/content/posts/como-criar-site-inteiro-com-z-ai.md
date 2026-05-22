@@ -4,7 +4,7 @@ date: "2025-05-22"
 excerpt: "Quer ter seu próprio site mas não sabe programar? Aprenda a criar um site completo do zero usando GitHub, Vercel e o modo agente da Z.ai — sem digitar uma linha de código."
 category: "Desenvolvimento"
 tags: ["z.ai", "github", "vercel", "ia", "desenvolvimento", "deploy", "next.js", "tutorial"]
-coverImage: ""
+coverImage: "/posts/z-ai-site-cover.jpg"
 readTime: "12 min"
 featured: false
 ---
