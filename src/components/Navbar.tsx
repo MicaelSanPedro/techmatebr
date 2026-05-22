@@ -23,6 +23,7 @@ export function Navbar({ allPosts }: NavbarProps) {
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [categoriesInView, setCategoriesInView] = useState(false);
+  const [hash, setHash] = useState("");
   const pathname = usePathname();
 
   // ── Sliding indicator refs ──
@@ -39,11 +40,12 @@ export function Navbar({ allPosts }: NavbarProps) {
 
     const navRect = navRef.current.getBoundingClientRect();
     const pillRect = el.getBoundingClientRect();
+    const navPadLeft = parseFloat(getComputedStyle(navRef.current).paddingLeft);
 
-    indicatorRef.current.style.transform = `translateX(${pillRect.left - navRect.left}px)`;
+    indicatorRef.current.style.transform = `translateX(${pillRect.left - navRect.left - navPadLeft}px)`;
     indicatorRef.current.style.width = `${pillRect.width}px`;
     indicatorRef.current.style.opacity = "1";
-  }, [categoriesInView, pathname]);
+  }, [categoriesInView, pathname, hash]);
 
   useEffect(() => {
     updateIndicator();
@@ -102,6 +104,14 @@ export function Navbar({ allPosts }: NavbarProps) {
     return () => { document.body.style.overflow = ""; };
   }, [mobileOpen]);
 
+  // Track URL hash for instant category detection on click
+  useEffect(() => {
+    setHash(window.location.hash);
+    const onHashChange = () => setHash(window.location.hash);
+    window.addEventListener("hashchange", onHashChange);
+    return () => window.removeEventListener("hashchange", onHashChange);
+  }, []);
+
   useEffect(() => {
     if (pathname !== "/") {
       setCategoriesInView(false);
@@ -120,13 +130,11 @@ export function Navbar({ allPosts }: NavbarProps) {
   }, [pathname]);
 
   function isActive(href: string) {
-    if (href === "/") return pathname === "/" && !categoriesInView;
-    if (href === "/#categories") return categoriesInView;
+    if (href === "/") return pathname === "/" && !categoriesInView && hash !== "#categories";
+    if (href === "/#categories") return pathname === "/" && (categoriesInView || hash === "#categories");
     if (href.startsWith("/#")) return false;
     return pathname.startsWith(href);
   }
-
-  const activeLabel = navLinks.find((l) => isActive(l.href))?.label ?? "";
 
   return (
     <>
@@ -156,7 +164,7 @@ export function Navbar({ allPosts }: NavbarProps) {
                 <span
                   ref={indicatorRef}
                   aria-hidden="true"
-                  className="absolute top-1 left-1 h-[calc(100%-8px)] rounded-full bg-gradient-to-b from-amber-500/25 to-amber-500/5 border border-amber-400/30 shadow-[0_4px_20px_-8px_rgba(249,189,24,0.5)] transition-all duration-300 ease-out pointer-events-none opacity-0"
+                  className="absolute top-1 left-0 h-[calc(100%-8px)] rounded-full bg-gradient-to-b from-amber-500/25 to-amber-500/5 border border-amber-400/30 shadow-[0_4px_20px_-8px_rgba(249,189,24,0.5)] transition-all duration-300 ease-out pointer-events-none opacity-0"
                   style={{ willChange: "transform, width" }}
                 />
 
