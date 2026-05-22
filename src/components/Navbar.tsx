@@ -23,7 +23,6 @@ export function Navbar({ allPosts }: NavbarProps) {
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [categoriesInView, setCategoriesInView] = useState(false);
-  const [hash, setHash] = useState("");
   const pathname = usePathname();
 
   // ── Sliding indicator refs ──
@@ -45,7 +44,7 @@ export function Navbar({ allPosts }: NavbarProps) {
     indicatorRef.current.style.transform = `translateX(${pillRect.left - navRect.left - navPadLeft}px)`;
     indicatorRef.current.style.width = `${pillRect.width}px`;
     indicatorRef.current.style.opacity = "1";
-  }, [categoriesInView, pathname, hash]);
+  }, [categoriesInView, pathname]);
 
   useEffect(() => {
     updateIndicator();
@@ -104,14 +103,6 @@ export function Navbar({ allPosts }: NavbarProps) {
     return () => { document.body.style.overflow = ""; };
   }, [mobileOpen]);
 
-  // Track URL hash for instant category detection on click
-  useEffect(() => {
-    setHash(window.location.hash);
-    const onHashChange = () => setHash(window.location.hash);
-    window.addEventListener("hashchange", onHashChange);
-    return () => window.removeEventListener("hashchange", onHashChange);
-  }, []);
-
   useEffect(() => {
     if (pathname !== "/") {
       setCategoriesInView(false);
@@ -129,9 +120,13 @@ export function Navbar({ allPosts }: NavbarProps) {
     return () => observer.disconnect();
   }, [pathname]);
 
+  const handleCategoriesClick = useCallback(() => {
+    setCategoriesInView(true);
+  }, []);
+
   function isActive(href: string) {
-    if (href === "/") return pathname === "/" && !categoriesInView && hash !== "#categories";
-    if (href === "/#categories") return pathname === "/" && (categoriesInView || hash === "#categories");
+    if (href === "/") return pathname === "/" && !categoriesInView;
+    if (href === "/#categories") return pathname === "/" && categoriesInView;
     if (href.startsWith("/#")) return false;
     return pathname.startsWith(href);
   }
@@ -174,6 +169,7 @@ export function Navbar({ allPosts }: NavbarProps) {
                     <Link
                       key={link.href}
                       href={link.href}
+                      onClick={link.href === "/#categories" ? handleCategoriesClick : undefined}
                       ref={(el) => {
                         if (el) pillRefs.current.set(link.href, el);
                       }}
