@@ -49,11 +49,11 @@ Problemas históricos do Wayland foram resolvidos:
 
 | Problema                           | Status no Plasma 6 |
 |------------------------------------|:------------------:|
-| Compartilhamento de tela (Discord) | ✅ Funciona         |
-| Captura de área com Spectacle      | ✅ Funciona         |
-| Aplicativos remoting (AnyDesk)     | ✅ Parcial          |
-| Auto-rotate em notebooks           | ✅ Funciona         |
-| Multi-GPU                          | ✅ Funciona         |
+| Compartilhamento de tela (Discord) | <span class="t-check"></span> Funciona         |
+| Captura de área com Spectacle      | <span class="t-check"></span> Funciona         |
+| Aplicativos remoting (AnyDesk)     | <span class="t-partial"></span> Parcial          |
+| Auto-rotate em notebooks           | <span class="t-check"></span> Funciona         |
+| Multi-GPU                          | <span class="t-check"></span> Funciona         |
 
 Para quem ainda precisa do X11 (por algum aplicativo específico), basta selecionar "Plasma (X11)" na tela de login do SDDM.
 

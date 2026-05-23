@@ -158,15 +158,15 @@ Neste artigo, vamos cobrir os melhores mods de otimização disponíveis em 2025
 
 | Mod | 1.20.1 | 1.20.4 | 1.20.6 | 1.21 | 1.21.1 | 1.21.4 |
 |-----|:------:|:------:|:------:|:----:|:------:|:------:|
-| **Sodium** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **Lithium** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **FerriteCore** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **ModernFix** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **ImmediatelyFast** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **Entity Culling** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **Noisium** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **Starlight** | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ |
-| **Babel** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **Sodium** | <span class="t-check"></span> | <span class="t-check"></span> | <span class="t-check"></span> | <span class="t-check"></span> | <span class="t-check"></span> | <span class="t-check"></span> |
+| **Lithium** | <span class="t-check"></span> | <span class="t-check"></span> | <span class="t-check"></span> | <span class="t-check"></span> | <span class="t-check"></span> | <span class="t-check"></span> |
+| **FerriteCore** | <span class="t-check"></span> | <span class="t-check"></span> | <span class="t-check"></span> | <span class="t-check"></span> | <span class="t-check"></span> | <span class="t-check"></span> |
+| **ModernFix** | <span class="t-check"></span> | <span class="t-check"></span> | <span class="t-check"></span> | <span class="t-check"></span> | <span class="t-check"></span> | <span class="t-check"></span> |
+| **ImmediatelyFast** | <span class="t-check"></span> | <span class="t-check"></span> | <span class="t-check"></span> | <span class="t-check"></span> | <span class="t-check"></span> | <span class="t-check"></span> |
+| **Entity Culling** | <span class="t-check"></span> | <span class="t-check"></span> | <span class="t-check"></span> | <span class="t-check"></span> | <span class="t-check"></span> | <span class="t-check"></span> |
+| **Noisium** | <span class="t-check"></span> | <span class="t-check"></span> | <span class="t-check"></span> | <span class="t-check"></span> | <span class="t-check"></span> | <span class="t-check"></span> |
+| **Starlight** | <span class="t-check"></span> | <span class="t-check"></span> | <span class="t-check"></span> | <span class="t-check"></span> | <span class="t-check"></span> | <span class="t-cross"></span> |
+| **Babel** | <span class="t-check"></span> | <span class="t-check"></span> | <span class="t-check"></span> | <span class="t-check"></span> | <span class="t-check"></span> | <span class="t-check"></span> |
 
 ---
 

@@ -288,10 +288,10 @@ Alguns jogos multiplayer usam sistemas anti-cheat que bloqueiam o Linux. A situa
 
 | Anti-Cheat | Status no Linux |
 |------------|:-:|
-| **BattlEye** | ✅ Suportado |
-| **Easy Anti-Cheat (EAC)** | ✅ Suportado |
-| **Vanguard (Valorant)** | ❌ Não funciona |
-| **Ricochet (CoD)** | ❌ Não funciona |
+| **BattlEye** | <span class="t-check"></span> Suportado |
+| **Easy Anti-Cheat (EAC)** | <span class="t-check"></span> Suportado |
+| **Vanguard (Valorant)** | <span class="t-cross"></span> Não funciona |
+| **Ricochet (CoD)** | <span class="t-cross"></span> Não funciona |
 
 Jogos como **Fortnite**, **Apex Legends**, **Destiny 2** e **Fall Guys** funcionam no Linux porque seus anti-cheats são compatíveis. Porém, **Valorant** e **Call of Duty** continuam bloqueados.
 

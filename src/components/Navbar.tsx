@@ -3,9 +3,10 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, ArrowRight, Search as SearchIcon } from "lucide-react";
+import { Menu, X, ArrowRight, Search as SearchIcon, User } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { SearchBar } from "@/components/SearchBar";
+import { getUsername } from "@/components/WelcomeScreen";
 import type { PostSummary } from "@/lib/posts";
 
 const navLinks = [
@@ -23,7 +24,20 @@ export function Navbar({ allPosts }: NavbarProps) {
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [categoriesInView, setCategoriesInView] = useState(false);
+  const [userName, setUserName] = useState<string | null>(null);
   const pathname = usePathname();
+
+  // Load username from localStorage
+  useEffect(() => {
+    setUserName(getUsername());
+  }, []);
+
+  // Listen for name changes via custom event
+  useEffect(() => {
+    const handler = () => setUserName(getUsername());
+    window.addEventListener("techmate:username-set", handler);
+    return () => window.removeEventListener("techmate:username-set", handler);
+  }, []);
 
   // ── Sliding indicator refs ──
   const pillRefs = useRef<Map<string, HTMLAnchorElement>>(new Map());
@@ -197,6 +211,18 @@ export function Navbar({ allPosts }: NavbarProps) {
 
             {/* Right side */}
             <div className="flex items-center gap-1 sm:gap-2">
+              {/* User name badge */}
+              {userName && (
+                <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-full
+                            backdrop-blur-[40px] saturate-[180%] brightness-[105%]
+                            bg-gradient-to-b from-white/[0.07] to-white/[0.02]
+                            border border-white/[0.10]
+                            shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
+                  <User className="w-3.5 h-3.5 text-amber-400/80" />
+                  <span className="text-xs font-medium text-white/70 max-w-[100px] truncate">{userName}</span>
+                </div>
+              )}
+
               <div className="hidden md:block">
                 <SearchBar allPosts={allPosts} />
               </div>
@@ -282,6 +308,22 @@ export function Navbar({ allPosts }: NavbarProps) {
         }`}
       >
         <div className="px-4 py-4 space-y-1.5 max-h-[calc(100vh-3.5rem)] overflow-y-auto">
+          {/* User name in mobile menu */}
+          {userName && (
+            <div className="flex items-center gap-2 px-4 py-2.5 mb-2 rounded-xl
+                        bg-amber-500/[0.08] border border-amber-500/15
+                        shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
+              <div className="flex items-center justify-center w-8 h-8 rounded-full
+                          bg-gradient-to-b from-amber-400/20 to-amber-500/10 border border-amber-400/20">
+                <User className="w-4 h-4 text-amber-400" />
+              </div>
+              <div>
+                <p className="text-[11px] text-white/40 font-medium uppercase tracking-wider">Olá</p>
+                <p className="text-sm font-semibold text-white/90 truncate max-w-[180px]">{userName}</p>
+              </div>
+            </div>
+          )}
+
           {navLinks.map((link) => {
             const active = isActive(link.href);
             return (
