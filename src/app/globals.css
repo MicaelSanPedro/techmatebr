@@ -1475,6 +1475,7 @@
   font-size: 0.95rem;
   font-weight: 400;
   letter-spacing: 0.02em;
+  text-align: center;
   opacity: 0;
   transform: translateY(10px);
 }
