@@ -1556,13 +1556,15 @@
     to   { height: 32px; }
   }
   .welcome-title {
-    font-size: 2rem;
+    font-size: 1.4rem;
+    white-space: nowrap;
   }
   .welcome-title--mate {
-    font-size: 2rem;
+    font-size: 1.4rem;
   }
   .welcome-tagline {
     font-size: 0.875rem;
+    white-space: nowrap;
   }
   .welcome-glow {
     width: 220px;
