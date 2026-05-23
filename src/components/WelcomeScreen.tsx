@@ -60,7 +60,7 @@ export function WelcomeScreen() {
     if (phase === "enter") {
       if (isReturning) {
         // Returning user — show welcome back then exit
-        const exitTimer = setTimeout(() => setPhase("exit"), 2800);
+        const exitTimer = setTimeout(() => setPhase("exit"), 5000);
         return () => clearTimeout(exitTimer);
       } else {
         // New user — go to name input after splash
@@ -143,7 +143,7 @@ export function WelcomeScreen() {
           <div className="welcome-text-group">
             <h1 className="welcome-title">
               <span className="welcome-title--tech">Bem-vindo de volta, </span>
-              <span className="welcome-title--mate shimmer-text">{userName}</span>
+              <span className="welcome-title--mate welcome-name-shine">{userName}</span>
               <span className="welcome-title--tech">!</span>
             </h1>
             <p className="welcome-tagline">Bom te ver por aqui</p>
