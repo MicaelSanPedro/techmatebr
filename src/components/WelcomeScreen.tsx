@@ -52,69 +52,51 @@ export function WelcomeScreen() {
     }
   }, []);
 
-  // Progress bar logic — simulates loading, completes when site is ready
+  // Progress bar — animates 0 to 100% over 3 seconds
   useEffect(() => {
     if (!mounted || !isVisible || phase !== "enter") return;
 
+    const duration = 3000;
+    const startTime = performance.now();
     let rafId: number;
-    let start: number | null = null;
-    const duration = 3000; // base duration in ms
-    const target = 85; // slow crawl up to 85%
 
-    const animate = (timestamp: number) => {
-      if (!start) start = timestamp;
-      const elapsed = timestamp - start;
+    const animate = (now: number) => {
+      const elapsed = now - startTime;
       const t = Math.min(elapsed / duration, 1);
-      // ease-out curve for natural feel
-      const eased = 1 - Math.pow(1 - t, 3);
-      setProgress(Math.round(eased * target));
-
-      if (t < 1) {
-        rafId = requestAnimationFrame(animate);
-      }
+      setProgress(Math.round(t * 100));
+      if (t < 1) rafId = requestAnimationFrame(animate);
     };
 
     rafId = requestAnimationFrame(animate);
-
-    // When site is fully loaded, complete the bar and exit
-    const complete = () => {
-      cancelAnimationFrame(rafId);
-      setProgress(100);
-      // Wait for bar to visually fill, then exit
-      setTimeout(() => setPhase("exit"), 400);
-    };
-
-    // If site already loaded
-    if (document.readyState === "complete") {
-      const timer = setTimeout(complete, 800);
-      return () => {
-        clearTimeout(timer);
-        cancelAnimationFrame(rafId);
-      };
-    }
-
-    // Listen for load event
-    window.addEventListener("load", complete);
-    return () => {
-      window.removeEventListener("load", complete);
-      cancelAnimationFrame(rafId);
-    };
+    return () => cancelAnimationFrame(rafId);
   }, [mounted, isVisible, phase]);
 
-  // Phase transitions (non-enter phases)
+  // Phase transitions
   useEffect(() => {
-    if (!mounted || !isVisible || phase !== "ask") return;
+    if (!mounted || !isVisible) return;
 
-    const handle = setTimeout(() => inputRef.current?.focus(), 300);
-    return () => clearTimeout(handle);
-  }, [phase, mounted, isVisible]);
+    if (phase === "enter") {
+      if (isReturning) {
+        const exitTimer = setTimeout(() => setPhase("exit"), 3000);
+        return () => clearTimeout(exitTimer);
+      } else {
+        const askTimer = setTimeout(() => setPhase("ask"), 3000);
+        return () => clearTimeout(askTimer);
+      }
+    }
 
+    if (phase === "exit") {
+      const doneTimer = setTimeout(() => setIsVisible(false), 900);
+      return () => clearTimeout(doneTimer);
+    }
+  }, [phase, mounted, isVisible, isReturning]);
+
+  // Auto-focus input when ask phase starts
   useEffect(() => {
-    if (!mounted || !isVisible || phase !== "exit") return;
-
-    const doneTimer = setTimeout(() => setIsVisible(false), 900);
-    return () => clearTimeout(doneTimer);
-  }, [phase, mounted, isVisible]);
+    if (phase === "ask") {
+      setTimeout(() => inputRef.current?.focus(), 300);
+    }
+  }, [phase]);
 
   const handleSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault();
