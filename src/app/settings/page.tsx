@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import {
   User,
   Moon,
@@ -11,25 +10,38 @@ import {
   ChevronRight,
   ArrowLeft,
   Shield,
-  Eye,
   Type,
   Monitor,
   Smartphone,
   Info,
-  ExternalLink,
   Heart,
   Zap,
   RotateCcw,
   HardDrive,
   Palette,
   Keyboard,
-  Bell,
   Globe,
+  Sparkles,
+  Volume2,
+  VolumeX,
+  Minimize2,
+  Maximize2,
+  Check,
+  Clock,
+  Layout,
+  Eye,
 } from "lucide-react";
 import { Logo } from "@/components/Logo";
 
-const USERNAME_KEY = "techmate_username";
-const THEME_KEY = "techmate_theme";
+/* ─── Storage helpers ─── */
+const KEYS = {
+  username: "techmate_username",
+  theme: "techmate_theme",
+  fontSize: "techmate_font_size",
+  reducedMotion: "techmate_reduced_motion",
+  compactMode: "techmate_compact_mode",
+  accentColor: "techmate_accent_color",
+} as const;
 
 function getStored(key: string): string | null {
   if (typeof window === "undefined") return null;
@@ -51,20 +63,34 @@ function getStorageSize(): string {
     }
     if (total < 1024) return `${total} B`;
     return `${(total / 1024).toFixed(1)} KB`;
-  } catch {
-    return "0 B";
-  }
+  } catch { return "0 B"; }
 }
-
 function getVisitCount(): number {
   try { return parseInt(localStorage.getItem("techmate_visits") || "1", 10); }
   catch { return 1; }
 }
-
 function getFirstVisit(): string {
   try { return localStorage.getItem("techmate_first_visit") || "Hoje"; }
   catch { return "Hoje"; }
 }
+
+/* ─── Font size presets ─── */
+const FONT_SIZES = [
+  { label: "Pequeno", value: "small", scale: 14, desc: "Textos mais compactos" },
+  { label: "Padrao", value: "medium", scale: 16, desc: "Tamanho original do site" },
+  { label: "Grande", value: "large", scale: 18, desc: "Textos maiores e mais legiveis" },
+  { label: "Extra grande", value: "xlarge", scale: 20, desc: "Maxima legibilidade" },
+] as const;
+
+/* ─── Accent colors ─── */
+const ACCENT_COLORS = [
+  { label: "Ambar", value: "amber", primary: "#f59e0b", glow: "rgba(245,158,11,0.45)" },
+  { label: "Azul", value: "blue", primary: "#3b82f6", glow: "rgba(59,130,246,0.45)" },
+  { label: "Violeta", value: "violet", primary: "#8b5cf6", glow: "rgba(139,92,246,0.45)" },
+  { label: "Rosa", value: "rose", primary: "#f43f5e", glow: "rgba(244,63,94,0.45)" },
+  { label: "Esmeralda", value: "emerald", primary: "#10b981", glow: "rgba(16,185,129,0.45)" },
+  { label: "Ciano", value: "cyan", primary: "#06b6d4", glow: "rgba(6,182,212,0.45)" },
+] as const;
 
 /* ─── Sub-components ─── */
 
@@ -109,7 +135,7 @@ function Toggle({
     <button
       type="button"
       onClick={() => onChange(!checked)}
-      className={`relative w-11 h-6 rounded-full transition-colors duration-300 flex-shrink-0
+      className={`relative w-11 h-6 rounded-full transition-colors duration-300 flex-shrink-0 cursor-pointer
                   ${checked ? "bg-amber-500/40" : "bg-white/[0.08] border border-white/[0.12]"}`}
       role="switch"
       aria-checked={checked}
@@ -133,7 +159,7 @@ function DangerButton({ onClick, children }: { onClick: () => void; children: Re
         onClick={() => setConfirm(true)}
         className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold
                    border border-red-500/20 bg-red-500/[0.08] text-red-400
-                   hover:bg-red-500/[0.15] transition-colors"
+                   hover:bg-red-500/[0.15] transition-colors cursor-pointer"
       >
         <Trash2 className="w-3.5 h-3.5" />
         {children}
@@ -147,7 +173,7 @@ function DangerButton({ onClick, children }: { onClick: () => void; children: Re
       <button
         type="button"
         onClick={() => { onClick(); setConfirm(false); }}
-        className="px-3 py-1.5 rounded-lg text-xs font-semibold
+        className="px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer
                    border border-red-500/30 bg-red-500/[0.15] text-red-400
                    hover:bg-red-500/[0.25] transition-colors"
       >
@@ -156,7 +182,7 @@ function DangerButton({ onClick, children }: { onClick: () => void; children: Re
       <button
         type="button"
         onClick={() => setConfirm(false)}
-        className="px-3 py-1.5 rounded-lg text-xs font-medium
+        className="px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer
                    border border-white/[0.08] bg-white/[0.03] text-white/40
                    hover:bg-white/[0.06] transition-colors"
       >
@@ -170,6 +196,80 @@ function Divider() {
   return <div className="h-px mx-4 my-1 bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />;
 }
 
+/* Segmented control for selecting from options */
+function SegmentedControl<T extends string>({
+  options,
+  value,
+  onChange,
+  renderLabel,
+}: {
+  options: readonly { label: string; value: T; desc?: string }[];
+  value: T;
+  onChange: (val: T) => void;
+  renderLabel?: (opt: { label: string; value: T; desc?: string }) => string;
+}) {
+  return (
+    <div className="flex flex-wrap gap-1.5">
+      {options.map((opt) => {
+        const isActive = value === opt.value;
+        return (
+          <button
+            key={opt.value}
+            type="button"
+            onClick={() => onChange(opt.value)}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 cursor-pointer
+                       ${isActive
+                         ? "bg-amber-500/20 border border-amber-500/30 text-amber-300 shadow-[0_0_12px_rgba(249,189,24,0.15)]"
+                         : "bg-white/[0.03] border border-white/[0.08] text-white/40 hover:bg-white/[0.06] hover:text-white/60"}`}
+          >
+            {renderLabel ? renderLabel(opt) : opt.label}
+            {isActive && <Check className="w-3 h-3 inline ml-1" />}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+/* Color picker grid */
+function ColorPicker({
+  colors,
+  value,
+  onChange,
+}: {
+  colors: typeof ACCENT_COLORS;
+  value: string;
+  onChange: (val: string) => void;
+}) {
+  return (
+    <div className="flex flex-wrap gap-2">
+      {colors.map((c) => {
+        const isActive = value === c.value;
+        return (
+          <button
+            key={c.value}
+            type="button"
+            onClick={() => onChange(c.value)}
+            className="relative w-9 h-9 rounded-xl border-2 transition-all duration-200 cursor-pointer
+                       hover:scale-110 active:scale-95"
+            style={{
+              backgroundColor: c.primary,
+              borderColor: isActive ? c.primary : "transparent",
+              boxShadow: isActive ? `0 0 16px ${c.glow}` : "none",
+              opacity: isActive ? 1 : 0.5,
+            }}
+            title={c.label}
+          >
+            {isActive && (
+              <Check className="w-4 h-4 text-white absolute inset-0 m-auto drop-shadow-md" />
+            )}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 /* ─── Main Settings Page ─── */
 
 export default function SettingsPage() {
@@ -177,22 +277,37 @@ export default function SettingsPage() {
   const [editingName, setEditingName] = useState(false);
   const [nameInput, setNameInput] = useState("");
   const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [fontSize, setFontSize] = useState<string>("medium");
+  const [reducedMotion, setReducedMotion] = useState(false);
+  const [compactMode, setCompactMode] = useState(false);
+  const [accentColor, setAccentColor] = useState("amber");
   const [mounted, setMounted] = useState(false);
   const [storageSize, setStorageSize] = useState("0 B");
   const [visitCount, setVisitCount] = useState(1);
   const [firstVisit, setFirstVisit] = useState("Hoje");
   const [savedMsg, setSavedMsg] = useState("");
-
-  const router = useRouter();
+  const nameInputRef = useRef<HTMLInputElement>(null);
 
   const hydrate = useCallback(() => {
     setMounted(true);
-    const name = getStored(USERNAME_KEY) || "";
+    const name = getStored(KEYS.username) || "";
     setUserName(name);
     setNameInput(name);
 
-    const t = getStored(THEME_KEY);
+    const t = getStored(KEYS.theme);
     if (t === "light") setTheme("light");
+
+    const fs = getStored(KEYS.fontSize);
+    if (fs) setFontSize(fs);
+
+    const rm = getStored(KEYS.reducedMotion);
+    if (rm === "true") setReducedMotion(true);
+
+    const cm = getStored(KEYS.compactMode);
+    if (cm === "true") setCompactMode(true);
+
+    const ac = getStored(KEYS.accentColor);
+    if (ac) setAccentColor(ac);
 
     setStorageSize(getStorageSize());
     setVisitCount(getVisitCount());
@@ -200,6 +315,56 @@ export default function SettingsPage() {
   }, []);
 
   useEffect(() => { hydrate(); }, [hydrate]);
+
+  /* ── Apply preferences to document ── */
+  const applyFontSize = useCallback((size: string) => {
+    const root = document.documentElement;
+    const preset = FONT_SIZES.find((f) => f.value === size);
+    if (preset) {
+      const scale = preset.scale / 16;
+      root.style.setProperty("--user-font-scale", String(scale));
+      root.style.fontSize = `${preset.scale}px`;
+    } else {
+      root.style.removeProperty("--user-font-scale");
+      root.style.fontSize = "";
+    }
+  }, []);
+
+  const applyReducedMotion = useCallback((enabled: boolean) => {
+    const root = document.documentElement;
+    if (enabled) {
+      root.classList.add("reduced-motion");
+    } else {
+      root.classList.remove("reduced-motion");
+    }
+  }, []);
+
+  const applyCompactMode = useCallback((enabled: boolean) => {
+    const root = document.documentElement;
+    if (enabled) {
+      root.classList.add("compact-mode");
+    } else {
+      root.classList.remove("compact-mode");
+    }
+  }, []);
+
+  const applyAccentColor = useCallback((color: string) => {
+    const preset = ACCENT_COLORS.find((c) => c.value === color);
+    if (!preset) return;
+    const root = document.documentElement;
+    root.style.setProperty("--accent", preset.primary);
+    root.style.setProperty("--accent-glow", preset.glow);
+    root.setAttribute("data-accent", color);
+  }, []);
+
+  /* Apply on mount */
+  useEffect(() => {
+    if (!mounted) return;
+    applyFontSize(fontSize);
+    applyReducedMotion(reducedMotion);
+    applyCompactMode(compactMode);
+    applyAccentColor(accentColor);
+  }, [mounted, fontSize, reducedMotion, compactMode, accentColor, applyFontSize, applyReducedMotion, applyCompactMode, applyAccentColor]);
 
   const showSaved = useCallback(() => {
     setSavedMsg("Salvo!");
@@ -210,7 +375,7 @@ export default function SettingsPage() {
   const handleSaveName = () => {
     const trimmed = nameInput.trim();
     if (!trimmed) { setEditingName(false); return; }
-    setStored(USERNAME_KEY, trimmed);
+    setStored(KEYS.username, trimmed);
     setUserName(trimmed);
     setEditingName(false);
     window.dispatchEvent(new CustomEvent("techmate:username-set"));
@@ -220,7 +385,7 @@ export default function SettingsPage() {
   const handleThemeToggle = () => {
     const next = theme === "dark" ? "light" : "dark";
     setTheme(next);
-    setStored(THEME_KEY, next);
+    setStored(KEYS.theme, next);
     if (next === "light") {
       document.documentElement.classList.remove("dark");
       const m = document.querySelector('meta[name="theme-color"]') as HTMLMetaElement | null;
@@ -233,15 +398,53 @@ export default function SettingsPage() {
     showSaved();
   };
 
+  const handleFontSizeChange = (val: string) => {
+    setFontSize(val);
+    setStored(KEYS.fontSize, val);
+    applyFontSize(val);
+    showSaved();
+  };
+
+  const handleReducedMotionToggle = (val: boolean) => {
+    setReducedMotion(val);
+    setStored(KEYS.reducedMotion, String(val));
+    applyReducedMotion(val);
+    showSaved();
+  };
+
+  const handleCompactModeToggle = (val: boolean) => {
+    setCompactMode(val);
+    setStored(KEYS.compactMode, String(val));
+    applyCompactMode(val);
+    showSaved();
+  };
+
+  const handleAccentColorChange = (val: string) => {
+    setAccentColor(val);
+    setStored(KEYS.accentColor, val);
+    applyAccentColor(val);
+    showSaved();
+  };
+
   const handleClearData = () => {
     try { localStorage.clear(); } catch { /* ignore */ }
     setUserName("");
     setNameInput("");
     setTheme("dark");
+    setFontSize("medium");
+    setReducedMotion(false);
+    setCompactMode(false);
+    setAccentColor("amber");
     setStorageSize("0 B");
     setVisitCount(1);
     setFirstVisit("Hoje");
     document.documentElement.classList.add("dark");
+    document.documentElement.classList.remove("reduced-motion", "compact-mode");
+    document.documentElement.style.removeProperty("--user-font-scale");
+    document.documentElement.style.fontSize = "";
+    document.documentElement.style.removeProperty("--accent");
+    document.documentElement.style.removeProperty("--accent-glow");
+    document.documentElement.removeAttribute("data-accent");
     const m = document.querySelector('meta[name="theme-color"]') as HTMLMetaElement | null;
     if (m) m.content = "#08070a";
     window.dispatchEvent(new CustomEvent("techmate:username-set"));
@@ -250,12 +453,17 @@ export default function SettingsPage() {
 
   const handleResetTheme = () => {
     setTheme("dark");
-    setStored(THEME_KEY, "dark");
+    setStored(KEYS.theme, "dark");
     document.documentElement.classList.add("dark");
     const m = document.querySelector('meta[name="theme-color"]') as HTMLMetaElement | null;
     if (m) m.content = "#08070a";
     showSaved();
   };
+
+  /* ── Compute display values ── */
+  const currentFontLabel = FONT_SIZES.find((f) => f.value === fontSize)?.label || "Padrao";
+  const currentAccentLabel = ACCENT_COLORS.find((c) => c.value === accentColor)?.label || "Ambar";
+  const currentAccentColor = ACCENT_COLORS.find((c) => c.value === accentColor)?.primary || "#f59e0b";
 
   if (!mounted) return null;
 
@@ -279,13 +487,16 @@ export default function SettingsPage() {
             <p className="text-xs text-white/35 mt-0.5">Personalize sua experiencia no TechMate</p>
           </div>
           {savedMsg && (
-            <span className="ml-auto text-xs font-semibold text-emerald-400 animate-fade-in">
+            <span className="ml-auto flex items-center gap-1.5 text-xs font-semibold text-emerald-400 animate-fade-in">
+              <Check className="w-3.5 h-3.5" />
               {savedMsg}
             </span>
           )}
         </div>
 
-        {/* ── Perf ── */}
+        {/* ══════════════════════════════════════════
+            SECTION 1: PERFIL
+        ══════════════════════════════════════════ */}
         <section className="liquid-glass-card rounded-2xl p-5 sm:p-6 mb-5">
           <SectionTitle icon={User} title="Perfil" />
           <Divider />
@@ -293,11 +504,22 @@ export default function SettingsPage() {
           <div className="py-3">
             {editingName ? (
               <div className="flex items-center gap-3 px-4">
+                <div className="flex items-center justify-center w-11 h-11 rounded-full
+                                bg-gradient-to-br from-amber-400/20 to-amber-500/10
+                                border border-amber-400/20 flex-shrink-0">
+                  <span className="text-lg font-bold text-amber-400">
+                    {(nameInput || "?").charAt(0).toUpperCase()}
+                  </span>
+                </div>
                 <input
+                  ref={nameInputRef}
                   type="text"
                   value={nameInput}
                   onChange={(e) => setNameInput(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleSaveName()}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") handleSaveName();
+                    if (e.key === "Escape") { setEditingName(false); setNameInput(userName); }
+                  }}
                   maxLength={24}
                   className="settings-input flex-1 !py-2 !px-3 !text-sm"
                   placeholder="Seu nome..."
@@ -323,13 +545,13 @@ export default function SettingsPage() {
                 <div className="flex items-center gap-3 flex-1 mr-4">
                   <div className="flex items-center justify-center w-11 h-11 rounded-full
                                   bg-gradient-to-br from-amber-400/20 to-amber-500/10
-                                  border border-amber-400/20">
+                                  border border-amber-400/20 flex-shrink-0">
                     <span className="text-lg font-bold text-amber-400">
                       {(userName || "?").charAt(0).toUpperCase()}
                     </span>
                   </div>
-                  <div>
-                    <p className="text-sm font-semibold text-white/85">
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold text-white/85 truncate">
                       {userName || "Visitante"}
                     </p>
                     <p className="text-xs text-white/30">
@@ -342,7 +564,7 @@ export default function SettingsPage() {
                   onClick={() => setEditingName(true)}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium
                              bg-white/[0.04] border border-white/[0.08] text-white/50
-                             hover:bg-white/[0.07] hover:text-white/70 transition-colors"
+                             hover:bg-white/[0.07] hover:text-white/70 transition-colors cursor-pointer"
                 >
                   Editar
                 </button>
@@ -365,11 +587,14 @@ export default function SettingsPage() {
           </SettingRow>
         </section>
 
-        {/* ── Aparcia ── */}
+        {/* ══════════════════════════════════════════
+            SECTION 2: APARENCIA
+        ══════════════════════════════════════════ */}
         <section className="liquid-glass-card rounded-2xl p-5 sm:p-6 mb-5">
           <SectionTitle icon={Palette} title="Aparencia" />
           <Divider />
 
+          {/* Theme toggle */}
           <SettingRow>
             <div className="flex items-center gap-3 flex-1 mr-4">
               <div className={`flex items-center justify-center w-9 h-9 rounded-xl border
@@ -392,6 +617,29 @@ export default function SettingsPage() {
 
           <Divider />
 
+          {/* Accent color */}
+          <div className="py-3 px-4">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="flex items-center justify-center w-9 h-9 rounded-xl
+                              bg-white/[0.05] border border-white/[0.08]">
+                <Palette className="w-4 h-4 text-white/50" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-white/80">Cor de destaque</p>
+                <p className="text-xs text-white/35 mt-0.5">
+                  Atual: <span className="font-semibold" style={{ color: currentAccentColor }}>{currentAccentLabel}</span>
+                </p>
+              </div>
+            </div>
+            <ColorPicker
+              colors={ACCENT_COLORS}
+              value={accentColor}
+              onChange={handleAccentColorChange}
+            />
+          </div>
+
+          <Divider />
+
           <SettingRow>
             <SettingLabel
               label="Restaurar tema padrao"
@@ -402,7 +650,7 @@ export default function SettingsPage() {
               onClick={handleResetTheme}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium
                          bg-white/[0.04] border border-white/[0.08] text-white/50
-                         hover:bg-white/[0.07] hover:text-white/70 transition-colors"
+                         hover:bg-white/[0.07] hover:text-white/70 transition-colors cursor-pointer"
             >
               <RotateCcw className="w-3 h-3" />
               Restaurar
@@ -410,11 +658,86 @@ export default function SettingsPage() {
           </SettingRow>
         </section>
 
-        {/* ── Prefercias ── */}
+        {/* ══════════════════════════════════════════
+            SECTION 3: PREFERENCIAS (tudo funcional!)
+        ══════════════════════════════════════════ */}
         <section className="liquid-glass-card rounded-2xl p-5 sm:p-6 mb-5">
           <SectionTitle icon={Monitor} title="Preferencias" />
           <Divider />
 
+          {/* Font size — interactive selector */}
+          <div className="py-3 px-4">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="flex items-center justify-center w-9 h-9 rounded-xl
+                              bg-amber-500/[0.08] border border-amber-500/15">
+                <Type className="w-4 h-4 text-amber-400" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-white/80">Tamanho da fonte</p>
+                <p className="text-xs text-white/35 mt-0.5">
+                  Atual: <span className="font-semibold text-white/60">{currentFontLabel}</span>
+                </p>
+              </div>
+            </div>
+            <SegmentedControl
+              options={FONT_SIZES.map((f) => ({ label: f.label, value: f.value }))}
+              value={fontSize}
+              onChange={handleFontSizeChange}
+            />
+            {/* Preview */}
+            <div className="mt-3 px-3 py-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
+              <p className="text-white/50 transition-all duration-200"
+                 style={{ fontSize: `${(FONT_SIZES.find((f) => f.value === fontSize)?.scale || 16)}px` }}>
+                Exemplo de texto para preview do tamanho escolhido.
+              </p>
+            </div>
+          </div>
+
+          <Divider />
+
+          {/* Reduced motion toggle */}
+          <SettingRow>
+            <div className="flex items-center gap-3 flex-1 mr-4">
+              <div className="flex items-center justify-center w-9 h-9 rounded-xl border
+                              bg-white/[0.05] border-white/[0.08]">
+                {reducedMotion
+                  ? <VolumeX className="w-4 h-4 text-white/50" />
+                  : <Volume2 className="w-4 h-4 text-amber-400" />}
+              </div>
+              <SettingLabel
+                label="Animacoes reduzidas"
+                description={reducedMotion
+                  ? "Animacoes desativadas para melhor acessibilidade"
+                  : "Ative para reduzir animacoes e efeitos visuais"}
+              />
+            </div>
+            <Toggle checked={reducedMotion} onChange={handleReducedMotionToggle} />
+          </SettingRow>
+
+          <Divider />
+
+          {/* Compact mode toggle */}
+          <SettingRow>
+            <div className="flex items-center gap-3 flex-1 mr-4">
+              <div className="flex items-center justify-center w-9 h-9 rounded-xl border
+                              bg-white/[0.05] border-white/[0.08]">
+                {compactMode
+                  ? <Minimize2 className="w-4 h-4 text-amber-400" />
+                  : <Maximize2 className="w-4 h-4 text-white/50" />}
+              </div>
+              <SettingLabel
+                label="Modo compacto"
+                description={compactMode
+                  ? "Espacamento reduzido, mais conteudo na tela"
+                  : "Ative para reduzir espacamentos e mostrar mais conteudo"}
+              />
+            </div>
+            <Toggle checked={compactMode} onChange={handleCompactModeToggle} />
+          </SettingRow>
+
+          <Divider />
+
+          {/* Language (locked to PT-BR for now) */}
           <SettingRow>
             <div className="flex items-center gap-3 flex-1 mr-4">
               <div className="flex items-center justify-center w-9 h-9 rounded-xl
@@ -423,7 +746,7 @@ export default function SettingsPage() {
               </div>
               <SettingLabel
                 label="Idioma"
-                description="Portugues Brasileiro (padrao)"
+                description="Portugues Brasileiro (unico idioma disponivel no momento)"
               />
             </div>
             <span className="text-xs font-medium text-white/30 px-2.5 py-1 rounded-lg
@@ -434,25 +757,7 @@ export default function SettingsPage() {
 
           <Divider />
 
-          <SettingRow>
-            <div className="flex items-center gap-3 flex-1 mr-4">
-              <div className="flex items-center justify-center w-9 h-9 rounded-xl
-                              bg-amber-500/[0.08] border border-amber-500/15">
-                <Type className="w-4 h-4 text-amber-400" />
-              </div>
-              <SettingLabel
-                label="Tamanho da fonte"
-                description="Tamanho padrao dos textos do site"
-              />
-            </div>
-            <span className="text-xs font-medium text-white/30 px-2.5 py-1 rounded-lg
-                           bg-white/[0.03] border border-white/[0.06]">
-              Padrao
-            </span>
-          </SettingRow>
-
-          <Divider />
-
+          {/* Keyboard shortcuts link */}
           <SettingRow>
             <div className="flex items-center gap-3 flex-1 mr-4">
               <div className="flex items-center justify-center w-9 h-9 rounded-xl
@@ -475,6 +780,7 @@ export default function SettingsPage() {
 
           <Divider />
 
+          {/* Platform info */}
           <SettingRow>
             <div className="flex items-center gap-3 flex-1 mr-4">
               <div className="flex items-center justify-center w-9 h-9 rounded-xl
@@ -482,8 +788,8 @@ export default function SettingsPage() {
                 <Smartphone className="w-4 h-4 text-amber-400" />
               </div>
               <SettingLabel
-                label="Versao"
-                description="Plataforma que voce esta usando"
+                label="Plataforma"
+                description="Dispositivo que voce esta usando"
               />
             </div>
             <span className="text-xs font-medium text-white/30 px-2.5 py-1 rounded-lg
@@ -493,7 +799,9 @@ export default function SettingsPage() {
           </SettingRow>
         </section>
 
-        {/* ── Armazenamento ── */}
+        {/* ══════════════════════════════════════════
+            SECTION 4: ARMAZENAMENTO
+        ══════════════════════════════════════════ */}
         <section className="liquid-glass-card rounded-2xl p-5 sm:p-6 mb-5">
           <SectionTitle icon={HardDrive} title="Armazenamento" />
           <Divider />
@@ -512,6 +820,32 @@ export default function SettingsPage() {
             <span className="text-sm font-mono text-white/40 tabular-nums">{storageSize}</span>
           </SettingRow>
 
+          {/* Storage breakdown */}
+          <Divider />
+          <div className="px-4 py-3">
+            <p className="text-xs text-white/30 mb-2 font-medium uppercase tracking-wider">Dados armazenados</p>
+            <div className="space-y-1.5">
+              {[
+                { label: "Nome de usuario", key: KEYS.username },
+                { label: "Tema", key: KEYS.theme },
+                { label: "Tamanho da fonte", key: KEYS.fontSize },
+                { label: "Animacoes reduzidas", key: KEYS.reducedMotion },
+                { label: "Modo compacto", key: KEYS.compactMode },
+                { label: "Cor de destaque", key: KEYS.accentColor },
+              ].map((item) => {
+                const val = getStored(item.key);
+                return (
+                  <div key={item.key} className="flex items-center justify-between py-1.5">
+                    <span className="text-xs text-white/45">{item.label}</span>
+                    <span className="text-xs text-white/25 font-mono truncate max-w-[140px]">
+                      {val || "(vazio)"}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
           <Divider />
 
           <div className="py-3 px-4">
@@ -527,7 +861,9 @@ export default function SettingsPage() {
           </div>
         </section>
 
-        {/* ── Atalhos ── */}
+        {/* ══════════════════════════════════════════
+            SECTION 5: ATALHOS DE TECLADO
+        ══════════════════════════════════════════ */}
         <section className="liquid-glass-card rounded-2xl p-5 sm:p-6 mb-5" id="shortcuts">
           <SectionTitle icon={Keyboard} title="Atalhos de Teclado" />
           <Divider />
@@ -561,7 +897,9 @@ export default function SettingsPage() {
           </div>
         </section>
 
-        {/* ── Sobre ── */}
+        {/* ══════════════════════════════════════════
+            SECTION 6: SOBRE
+        ══════════════════════════════════════════ */}
         <section className="liquid-glass-card rounded-2xl p-5 sm:p-6 mb-5">
           <SectionTitle icon={Info} title="Sobre o TechMate" />
           <Divider />
@@ -616,7 +954,7 @@ export default function SettingsPage() {
           </div>
         </section>
 
-        {/* ── Footer subtle ── */}
+        {/* ── Footer ── */}
         <div className="flex items-center justify-center gap-2 pt-4 pb-2">
           <Zap className="w-3 h-3 text-amber-400/30" />
           <p className="text-[11px] text-white/15">TechMate v1.0.0</p>

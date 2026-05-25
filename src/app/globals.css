@@ -2232,7 +2232,22 @@ html:not(.dark) .liquid-glass-mobile-menu a[class*="shadow-"] {
   animation: page-enter 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-/* ─── Reduce motion ─────────────────────────── */
+/* ─── Reduce motion (user toggle & system) ── */
+.reduced-motion *,
+.reduced-motion *::before,
+.reduced-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+.reduced-motion .ambient-orb,
+.reduced-motion .cinema-grain,
+.reduced-motion .light-leak,
+.reduced-motion .bokeh-particle,
+.reduced-motion .welcome-ring {
+  display: none !important;
+}
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -2240,6 +2255,28 @@ html:not(.dark) .liquid-glass-mobile-menu a[class*="shadow-"] {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* ─── User font size scaling ─────────────────── */
+html {
+  --user-font-scale: 1;
+}
+html:not([style*="--user-font-scale"]) {
+  --user-font-scale: 1;
+}
+
+/* ─── Compact mode ────────────────────────────── */
+.compact-mode .liquid-glass-card {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+.compact-mode [class*="py-3.5"],
+.compact-mode [class*="py-4"] {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+.compact-mode section {
+  margin-bottom: 0.75rem !important;
 }
 
 /* ─────────────────────────────────────────────
