@@ -9,6 +9,7 @@ import { BokehParticles } from "@/components/BokehParticles";
 import { WelcomeScreen } from "@/components/WelcomeScreen";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { ThemeSync } from "@/components/ThemeSync";
+import { MouseOrb } from "@/components/MouseOrb";
 import { getAllPosts } from "@/lib/posts";
 
 const geistSans = Geist({
@@ -116,6 +117,7 @@ export default function RootLayout({
           <Footer />
         </div>
         <ScrollToTop />
+        <MouseOrb />
       </body>
     </html>
   );

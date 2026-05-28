@@ -2232,6 +2232,52 @@ html:not(.dark) .liquid-glass-mobile-menu a[class*="shadow-"] {
   animation: page-enter 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
+/* ─── Mouse Orb (premium cursor follower) ─── */
+.mouse-orb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 40% 40%,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(249, 189, 24, 0.8) 25%,
+    rgba(249, 189, 24, 0.4) 50%,
+    transparent 70%
+  );
+  box-shadow:
+    0 0 16px 4px rgba(249, 189, 24, 0.5),
+    0 0 40px 8px rgba(249, 189, 24, 0.2),
+    0 0 80px 16px rgba(249, 189, 24, 0.08);
+  will-change: transform;
+  mix-blend-mode: screen;
+}
+
+.mouse-orb-trail {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(249, 189, 24, 0.25) 0%,
+    rgba(249, 189, 24, 0.08) 40%,
+    transparent 70%
+  );
+  box-shadow:
+    0 0 30px 6px rgba(249, 189, 24, 0.15),
+    0 0 60px 12px rgba(249, 189, 24, 0.05);
+  will-change: transform, opacity;
+  mix-blend-mode: screen;
+  transition: opacity 0.4s ease;
+}
+
+/* Hide orb on touch devices */
+@media (hover: none) and (pointer: coarse) {
+  .mouse-orb,
+  .mouse-orb-trail {
+    display: none !important;
+  }
+}
+
 /* ─── 404 page animations ────────────────────── */
 @keyframes shimmer-404 {
   0% { background-position: -200% center; }
