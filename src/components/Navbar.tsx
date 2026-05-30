@@ -21,11 +21,14 @@ interface NavbarProps {
 
 export function Navbar({ allPosts }: NavbarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const [mobileSearchActive, setMobileSearchActive] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [categoriesInView, setCategoriesInView] = useState(false);
   const [userName, setUserName] = useState<string | null>(null);
+  const [mobileQuery, setMobileQuery] = useState("");
+  const [mobileResults, setMobileResults] = useState<PostSummary[]>([]);
   const pathname = usePathname();
+  const mobileInputRef = useRef<HTMLInputElement>(null);
 
   // Load username from localStorage
   useEffect(() => {
@@ -38,6 +41,30 @@ export function Navbar({ allPosts }: NavbarProps) {
     window.addEventListener("techmate:username-set", handler);
     return () => window.removeEventListener("techmate:username-set", handler);
   }, []);
+
+  // ── Mobile search filtering ──
+  useEffect(() => {
+    if (mobileQuery.trim().length < 2) {
+      setMobileResults([]);
+      return;
+    }
+    const q = mobileQuery.toLowerCase();
+    const filtered = allPosts.filter(
+      (post) =>
+        post.frontmatter.title.toLowerCase().includes(q) ||
+        post.frontmatter.excerpt.toLowerCase().includes(q) ||
+        post.frontmatter.category.toLowerCase().includes(q) ||
+        post.frontmatter.tags.some((tag) => tag.toLowerCase().includes(q))
+    );
+    setMobileResults(filtered.slice(0, 5));
+  }, [mobileQuery, allPosts]);
+
+  // Auto-focus mobile input when search is activated
+  useEffect(() => {
+    if (mobileSearchActive && mobileInputRef.current) {
+      mobileInputRef.current.focus();
+    }
+  }, [mobileSearchActive]);
 
   // ── Sliding indicator refs ──
   const pillRefs = useRef<Map<string, HTMLAnchorElement>>(new Map());
@@ -64,12 +91,9 @@ export function Navbar({ allPosts }: NavbarProps) {
     updateIndicator();
   }, [updateIndicator]);
 
-  // Re-measure on resize
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 768) {
-        updateIndicator();
-      }
+      if (window.innerWidth >= 768) updateIndicator();
     };
     window.addEventListener("resize", handleResize, { passive: true });
     return () => window.removeEventListener("resize", handleResize);
@@ -95,7 +119,7 @@ export function Navbar({ allPosts }: NavbarProps) {
     const handleResize = () => {
       if (window.innerWidth >= 768) {
         setMobileOpen(false);
-        setMobileSearchOpen(false);
+        setMobileSearchActive(false);
       }
     };
     window.addEventListener("resize", handleResize, { passive: true });
@@ -104,28 +128,27 @@ export function Navbar({ allPosts }: NavbarProps) {
 
   useEffect(() => {
     setMobileOpen(false);
-    setMobileSearchOpen(false);
+    setMobileSearchActive(false);
+    setMobileQuery("");
   }, [pathname]);
 
-  // Lock body scroll when mobile menu is open
+  // Lock body scroll when mobile menu or search results are open
   useEffect(() => {
-    if (mobileOpen) {
+    if (mobileOpen || (mobileSearchActive && mobileResults.length > 0)) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
     }
     return () => { document.body.style.overflow = ""; };
-  }, [mobileOpen]);
+  }, [mobileOpen, mobileSearchActive, mobileResults.length]);
 
   useEffect(() => {
     if (pathname !== "/") {
       setCategoriesInView(false);
       return;
     }
-
     const section = document.getElementById("categories");
     if (!section) return;
-
     const observer = new IntersectionObserver(
       ([entry]) => setCategoriesInView(entry.isIntersecting),
       { rootMargin: "-30% 0px -60% 0px" }
@@ -145,13 +168,18 @@ export function Navbar({ allPosts }: NavbarProps) {
     return pathname.startsWith(href);
   }
 
+  function handleMobileSearchSelect(slug: string) {
+    setMobileSearchActive(false);
+    setMobileQuery("");
+  }
+
   return (
     <>
       <nav
         className={`fixed top-0 left-0 right-0 z-50 glass-nav ${scrolled ? "scrolled" : ""}`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-14 sm:h-16 lg:h-[72px] gap-2">
+          <div className="flex items-center justify-between h-14 sm:h-16 lg:h-[72px] gap-3">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 sm:gap-2.5 group shrink-0">
               <div className="relative transition-transform duration-300 group-hover:scale-105">
@@ -173,7 +201,6 @@ export function Navbar({ allPosts }: NavbarProps) {
                            border border-white/[0.14]
                            shadow-[0_4px_16px_-4px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.1)]"
               >
-                {/* ── Sliding active indicator (liquid glass capsule) ── */}
                 <span
                   ref={indicatorRef}
                   aria-hidden="true"
@@ -211,7 +238,7 @@ export function Navbar({ allPosts }: NavbarProps) {
 
             {/* Right side */}
             <div className="flex items-center gap-1 sm:gap-2">
-              {/* User name badge + settings link */}
+              {/* User name badge + settings link (desktop) */}
               {userName && (
                 <div className="hidden sm:flex items-center gap-1.5">
                   <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full
@@ -238,11 +265,12 @@ export function Navbar({ allPosts }: NavbarProps) {
                 </div>
               )}
 
+              {/* Desktop search */}
               <div className="hidden md:block">
                 <SearchBar allPosts={allPosts} />
               </div>
 
-              {/* CTA -- liquid glass sheen */}
+              {/* Desktop CTA */}
               <Link
                 href="/blog"
                 className="hidden lg:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full
@@ -258,51 +286,109 @@ export function Navbar({ allPosts }: NavbarProps) {
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
 
-              {/* Mobile search icon -- liquid glass pill */}
-              <button
-                onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
-                className="md:hidden flex items-center justify-center w-10 h-10 rounded-xl
-                           backdrop-blur-[40px] saturate-[180%] brightness-[105%]
-                           bg-gradient-to-b from-white/[0.08] to-white/[0.02]
-                           border border-white/[0.12]
-                           shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]
-                           hover:border-white/[0.22] active:scale-95
-                           transition-all duration-200"
-                aria-label="Buscar"
-                type="button"
-              >
-                <SearchIcon className="w-5 h-5 text-white/80" />
-              </button>
+              {/* ── Mobile: unified search + hamburger bar ── */}
+              <div className="md:hidden flex-1 max-w-[280px]">
+                <div className="mobile-search-bar flex items-center">
+                  {/* Search area */}
+                  <div className="flex-1 flex items-center gap-2 py-2.5 px-3 min-w-0">
+                    <SearchIcon className="w-[18px] h-[18px] text-white/40 shrink-0" />
+                    <input
+                      ref={mobileInputRef}
+                      type="text"
+                      value={mobileQuery}
+                      onChange={(e) => {
+                        setMobileQuery(e.target.value);
+                        if (!mobileSearchActive) setMobileSearchActive(true);
+                      }}
+                      onFocus={() => setMobileSearchActive(true)}
+                      placeholder="Find..."
+                      className="flex-1 min-w-0 bg-transparent text-sm text-white placeholder:text-white/25 outline-none"
+                    />
+                  </div>
 
-              {/* Mobile hamburger -- two horizontal lines */}
-              <button
-                onClick={() => setMobileOpen(true)}
-                className="md:hidden flex items-center justify-center w-10 h-10 rounded-xl
-                           backdrop-blur-[40px] saturate-[180%] brightness-[105%]
-                           bg-gradient-to-b from-white/[0.08] to-white/[0.02]
-                           border border-white/[0.12]
-                           shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]
-                           hover:border-white/[0.22] active:scale-95
-                           transition-all duration-200"
-                aria-label="Abrir menu"
-                type="button"
-              >
-                <span className="flex flex-col gap-[5px]">
-                  <span className="block w-4 h-[2px] rounded-full bg-white/80" />
-                  <span className="block w-4 h-[2px] rounded-full bg-white/80" />
-                </span>
-              </button>
+                  {/* Divider */}
+                  <div className="mobile-search-divider shrink-0" aria-hidden />
+
+                  {/* Hamburger */}
+                  <button
+                    onClick={() => setMobileOpen(true)}
+                    className="flex items-center justify-center w-12 h-12 shrink-0"
+                    aria-label="Abrir menu"
+                    type="button"
+                  >
+                    <span className="flex flex-col gap-[5px]">
+                      <span className="block w-[16px] h-[2px] rounded-full bg-white/80" />
+                      <span className="block w-[16px] h-[2px] rounded-full bg-white/80" />
+                    </span>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
-
-          {/* Mobile inline search */}
-          {mobileSearchOpen && (
-            <div className="md:hidden pb-3 px-1 animate-fade-in">
-              <SearchBar allPosts={allPosts} alwaysOpen />
-            </div>
-          )}
         </div>
       </nav>
+
+      {/* ── Mobile search results dropdown ── */}
+      {mobileSearchActive && mobileResults.length > 0 && (
+        <div className="md:hidden fixed inset-x-0 top-14 z-[55] px-4 animate-fade-in">
+          <div className="mobile-search-results">
+            <div className="p-1.5">
+              {mobileResults.map((post) => (
+                <Link
+                  key={post.slug}
+                  href={`/blog/${post.slug}`}
+                  onClick={() => handleMobileSearchSelect(post.slug)}
+                  className="flex items-start gap-3 px-3 py-2.5 rounded-lg
+                             text-white/80 hover:bg-white/[0.05] active:bg-white/[0.06]
+                             transition-colors"
+                >
+                  <span className="text-amber-400 mt-0.5 shrink-0">
+                    <SearchIcon className="w-3.5 h-3.5" />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm text-white font-medium truncate">
+                      {post.frontmatter.title}
+                    </p>
+                    <p className="text-xs text-white/30 truncate mt-0.5">
+                      {post.frontmatter.category} &middot; {post.frontmatter.readTime} de leitura
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+            <div className="px-3.5 py-2 border-t border-white/[0.04]">
+              <p className="text-[11px] text-white/20">
+                {mobileResults.length} resultado{mobileResults.length !== 1 ? "s" : ""}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* No results overlay */}
+      {mobileSearchActive && mobileQuery.trim().length >= 2 && mobileResults.length === 0 && (
+        <div className="md:hidden fixed inset-x-0 top-14 z-[55] px-4 animate-fade-in">
+          <div className="mobile-search-results">
+            <div className="px-4 py-6 text-center">
+              <p className="text-sm text-white/30">
+                Nenhum resultado para &quot;{mobileQuery}&quot;
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Close mobile search results when tapping outside */}
+      {mobileSearchActive && (
+        <div
+          className="md:hidden fixed inset-0 top-0 z-[54]"
+          onClick={() => {
+            setMobileSearchActive(false);
+            setMobileQuery("");
+          }}
+          aria-hidden
+        />
+      )}
 
       {/* ── Mobile Fullscreen Menu Overlay ── */}
       <div
@@ -311,12 +397,8 @@ export function Navbar({ allPosts }: NavbarProps) {
         }`}
         aria-hidden={!mobileOpen}
       >
-        {/* Backdrop */}
         <div className="mobile-menu-backdrop" />
-
-        {/* Menu content */}
         <div className="mobile-menu-content">
-          {/* Close button */}
           <button
             onClick={() => setMobileOpen(false)}
             className="mobile-menu-close"
@@ -326,9 +408,7 @@ export function Navbar({ allPosts }: NavbarProps) {
             <X className="w-6 h-6" />
           </button>
 
-          {/* Links */}
           <div className="mobile-menu-links">
-            {/* User greeting */}
             {userName && (
               <div className="mobile-menu-user">
                 <div className="flex items-center justify-center w-12 h-12 rounded-full
@@ -342,7 +422,6 @@ export function Navbar({ allPosts }: NavbarProps) {
               </div>
             )}
 
-            {/* Nav links */}
             <div className="mobile-menu-nav">
               {navLinks.map((link, index) => {
                 const active = isActive(link.href);
@@ -360,7 +439,6 @@ export function Navbar({ allPosts }: NavbarProps) {
                 );
               })}
 
-              {/* Settings */}
               <Link
                 href="/settings"
                 onClick={() => setMobileOpen(false)}
@@ -375,7 +453,6 @@ export function Navbar({ allPosts }: NavbarProps) {
               </Link>
             </div>
 
-            {/* CTA */}
             <div className="mobile-menu-cta" style={{ animationDelay: `${navLinks.length * 80 + 200}ms` }}>
               <Link
                 href="/blog"
