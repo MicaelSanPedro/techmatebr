@@ -288,10 +288,10 @@ export function Navbar({ allPosts }: NavbarProps) {
 
       {/* ── Mobile Floating Search + Hamburger ── */}
       <div className="md:hidden fixed bottom-6 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
-        <div className="mobile-search-bar pointer-events-auto flex items-center">
+        <div className={`mobile-search-bar pointer-events-auto flex items-center ${mobileSearchActive ? 'expanded' : ''}`}>
           {/* Search area */}
-          <div className="flex items-center gap-1.5 py-1.5 px-2.5 min-w-0">
-            <SearchIcon className="w-3.5 h-3.5 text-white/40 shrink-0" />
+          <div className="mobile-search-input-wrap flex items-center gap-1.5 py-1.5 px-2.5 min-w-0">
+            <SearchIcon className="w-3.5 h-3.5 text-white/50 shrink-0" />
             <input
               ref={mobileInputRef}
               type="text"
@@ -301,8 +301,9 @@ export function Navbar({ allPosts }: NavbarProps) {
                 if (!mobileSearchActive) setMobileSearchActive(true);
               }}
               onFocus={() => setMobileSearchActive(true)}
+              onBlur={() => { if (!mobileQuery) setMobileSearchActive(false); }}
               placeholder="Pesquisar"
-              className="w-[70px] min-w-0 bg-transparent text-xs text-white placeholder:text-white/25 outline-none"
+              className="w-[70px] min-w-0 bg-transparent text-xs text-white placeholder:text-white/30 outline-none"
             />
           </div>
 
@@ -406,8 +407,8 @@ export function Navbar({ allPosts }: NavbarProps) {
 
           <div className="mobile-menu-links">
             {userName && (
-              <div className="mobile-menu-user">
-                <div className="flex items-center justify-center w-12 h-12 rounded-full
+              <div className="mobile-menu-user flex flex-col items-center">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full shrink-0
                             bg-gradient-to-b from-amber-400/20 to-amber-500/10 border border-amber-400/20">
                   <User className="w-5 h-5 text-amber-400" />
                 </div>
