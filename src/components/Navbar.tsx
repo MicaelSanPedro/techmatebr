@@ -3,14 +3,14 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, ArrowRight, Search as SearchIcon, User, Settings } from "lucide-react";
+import { ArrowRight, Search as SearchIcon, User, Settings, X } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { SearchBar } from "@/components/SearchBar";
 import { getUsername } from "@/components/WelcomeScreen";
 import type { PostSummary } from "@/lib/posts";
 
 const navLinks = [
-  { label: "Início", href: "/" },
+  { label: "Inicio", href: "/" },
   { label: "Blog", href: "/blog" },
   { label: "Categorias", href: "/#categories" },
 ];
@@ -242,7 +242,7 @@ export function Navbar({ allPosts }: NavbarProps) {
                 <SearchBar allPosts={allPosts} />
               </div>
 
-              {/* CTA — liquid glass sheen */}
+              {/* CTA -- liquid glass sheen */}
               <Link
                 href="/blog"
                 className="hidden lg:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full
@@ -258,7 +258,7 @@ export function Navbar({ allPosts }: NavbarProps) {
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
 
-              {/* Mobile search icon — liquid glass pill */}
+              {/* Mobile search icon -- liquid glass pill */}
               <button
                 onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
                 className="md:hidden flex items-center justify-center w-10 h-10 rounded-xl
@@ -274,9 +274,9 @@ export function Navbar({ allPosts }: NavbarProps) {
                 <SearchIcon className="w-5 h-5 text-white/80" />
               </button>
 
-              {/* Mobile hamburger — liquid glass pill */}
+              {/* Mobile hamburger -- two horizontal lines */}
               <button
-                onClick={() => setMobileOpen(!mobileOpen)}
+                onClick={() => setMobileOpen(true)}
                 className="md:hidden flex items-center justify-center w-10 h-10 rounded-xl
                            backdrop-blur-[40px] saturate-[180%] brightness-[105%]
                            bg-gradient-to-b from-white/[0.08] to-white/[0.02]
@@ -284,15 +284,13 @@ export function Navbar({ allPosts }: NavbarProps) {
                            shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]
                            hover:border-white/[0.22] active:scale-95
                            transition-all duration-200"
-                aria-label={mobileOpen ? "Fechar menu" : "Abrir menu"}
-                aria-expanded={mobileOpen}
+                aria-label="Abrir menu"
                 type="button"
               >
-                {mobileOpen ? (
-                  <X className="w-5 h-5 text-white/80" />
-                ) : (
-                  <Menu className="w-5 h-5 text-white/80" />
-                )}
+                <span className="flex flex-col gap-[5px]">
+                  <span className="block w-4 h-[2px] rounded-full bg-white/80" />
+                  <span className="block w-4 h-[2px] rounded-full bg-white/80" />
+                </span>
               </button>
             </div>
           </div>
@@ -306,85 +304,88 @@ export function Navbar({ allPosts }: NavbarProps) {
         </div>
       </nav>
 
-      {/* Mobile fullscreen menu backdrop */}
+      {/* ── Mobile Fullscreen Menu Overlay ── */}
       <div
-        onClick={() => setMobileOpen(false)}
-        className={`md:hidden fixed inset-0 z-30 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${
-          mobileOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        className={`mobile-menu-overlay md:hidden ${
+          mobileOpen ? "mobile-menu-open" : ""
         }`}
-      />
-
-      {/* Mobile Dropdown Menu — liquid glass mobile-menu */}
-      <div
-        className={`fixed inset-x-0 top-14 z-40 liquid-glass-mobile-menu border-b border-white/[0.08] md:hidden transition-all duration-300 ease-out ${
-          mobileOpen
-            ? "opacity-100 translate-y-0 pointer-events-auto"
-            : "opacity-0 -translate-y-3 pointer-events-none"
-        }`}
+        aria-hidden={!mobileOpen}
       >
-        <div className="px-4 py-4 space-y-1.5 max-h-[calc(100vh-3.5rem)] overflow-y-auto">
-          {/* User name in mobile menu */}
-          {userName && (
-            <div className="flex items-center gap-2 px-4 py-2.5 mb-2 rounded-xl
-                        bg-amber-500/[0.08] border border-amber-500/15
-                        shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
-              <div className="flex items-center justify-center w-8 h-8 rounded-full
-                          bg-gradient-to-b from-amber-400/20 to-amber-500/10 border border-amber-400/20">
-                <User className="w-4 h-4 text-amber-400" />
-              </div>
-              <div>
-                <p className="text-[11px] text-white/40 font-medium uppercase tracking-wider">Olá</p>
-                <p className="text-sm font-semibold text-white/90 truncate max-w-[180px]">{userName}</p>
-              </div>
-            </div>
-          )}
+        {/* Backdrop */}
+        <div className="mobile-menu-backdrop" />
 
-          {navLinks.map((link) => {
-            const active = isActive(link.href);
-            return (
+        {/* Menu content */}
+        <div className="mobile-menu-content">
+          {/* Close button */}
+          <button
+            onClick={() => setMobileOpen(false)}
+            className="mobile-menu-close"
+            aria-label="Fechar menu"
+            type="button"
+          >
+            <X className="w-6 h-6" />
+          </button>
+
+          {/* Links */}
+          <div className="mobile-menu-links">
+            {/* User greeting */}
+            {userName && (
+              <div className="mobile-menu-user">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full
+                            bg-gradient-to-b from-amber-400/20 to-amber-500/10 border border-amber-400/20">
+                  <User className="w-5 h-5 text-amber-400" />
+                </div>
+                <div className="mt-3 text-center">
+                  <p className="text-xs text-white/40 font-medium uppercase tracking-wider">Ola</p>
+                  <p className="text-lg font-semibold text-white/90 truncate max-w-[200px]">{userName}</p>
+                </div>
+              </div>
+            )}
+
+            {/* Nav links */}
+            <div className="mobile-menu-nav">
+              {navLinks.map((link, index) => {
+                const active = isActive(link.href);
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setMobileOpen(false)}
+                    className={`mobile-menu-link ${active ? "active" : ""}`}
+                    style={{ animationDelay: `${index * 80 + 100}ms` }}
+                  >
+                    <span className="mobile-menu-link-text">{link.label}</span>
+                    <ArrowRight className="w-4 h-4 opacity-40" />
+                  </Link>
+                );
+              })}
+
+              {/* Settings */}
               <Link
-                key={link.href}
-                href={link.href}
+                href="/settings"
                 onClick={() => setMobileOpen(false)}
-                className={`flex items-center justify-between w-full px-4 py-3.5 text-base font-medium rounded-xl transition-all duration-200 ${
-                  active
-                    ? "text-amber-200 backdrop-blur-[40px] bg-amber-500/10 border border-amber-500/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
-                    : "text-white/80 hover:text-white hover:bg-white/[0.05] border border-transparent hover:border-white/[0.08]"
-                }`}
+                className="mobile-menu-link mobile-menu-link-secondary"
+                style={{ animationDelay: `${navLinks.length * 80 + 100}ms` }}
               >
-                {link.label}
-                <ArrowRight className="w-4 h-4 opacity-50" />
+                <div className="flex items-center gap-3">
+                  <Settings className="w-4 h-4" />
+                  <span className="mobile-menu-link-text">Configuracoes</span>
+                </div>
+                <ArrowRight className="w-4 h-4 opacity-40" />
               </Link>
-            );
-          })}
+            </div>
 
-          {/* CTA */}
-          <div className="pt-3 mt-2 border-t border-white/[0.06]">
-            <Link
-              href="/blog"
-              onClick={() => setMobileOpen(false)}
-              className="btn-primary w-full justify-center"
-            >
-              Ler todos os artigos
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-
-          {/* Settings link */}
-          <div className="pt-2 mt-1">
-            <Link
-              href="/settings"
-              onClick={() => setMobileOpen(false)}
-              className="flex items-center justify-between w-full px-4 py-3.5 text-base font-medium rounded-xl
-                         text-white/50 hover:text-white/70 hover:bg-white/[0.03] border border-transparent
-                         hover:border-white/[0.06] transition-all duration-200"
-            >
-              <div className="flex items-center gap-3">
-                <Settings className="w-4 h-4" />
-                <span>Configuracoes</span>
-              </div>
-              <ArrowRight className="w-4 h-4 opacity-50" />
-            </Link>
+            {/* CTA */}
+            <div className="mobile-menu-cta" style={{ animationDelay: `${navLinks.length * 80 + 200}ms` }}>
+              <Link
+                href="/blog"
+                onClick={() => setMobileOpen(false)}
+                className="mobile-menu-cta-btn"
+              >
+                Ler todos os artigos
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
           </div>
         </div>
       </div>
