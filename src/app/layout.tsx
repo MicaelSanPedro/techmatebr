@@ -14,19 +14,19 @@ import { getAllPosts } from "@/lib/posts";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
   display: "swap",
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
   display: "swap",
 });
 
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains-mono",
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
   display: "swap",
 });
 
