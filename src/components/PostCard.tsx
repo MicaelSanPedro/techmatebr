@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Calendar, Clock, ArrowUpRight } from "lucide-react";
+import { FavoriteButton } from "@/components/FavoriteButton";
 import { CategoryBadge } from "@/components/CategoryBadge";
 import type { PostSummary } from "@/lib/posts";
 import { useRef } from "react";
@@ -74,16 +75,19 @@ export function PostCard({ post }: PostCardProps) {
             <CategoryBadge category={frontmatter.category} />
           </div>
 
-          {/* Arrow icon — liquid glass mini pill */}
-          <div className="absolute top-3 right-3 w-8 h-8 sm:w-9 sm:h-9 rounded-xl
-                          backdrop-blur-[40px] saturate-[180%]
-                          bg-gradient-to-b from-white/[0.1] to-white/[0.03]
-                          border border-white/[0.15]
-                          shadow-[inset_0_1px_0_rgba(255,255,255,0.15),0_4px_12px_-4px_rgba(0,0,0,0.4)]
-                          flex items-center justify-center
-                          opacity-70 sm:opacity-0 sm:-translate-y-1 sm:group-hover:opacity-100 sm:group-hover:translate-y-0
-                          transition-all duration-300">
-            <ArrowUpRight className="w-4 h-4 text-amber-300" />
+          {/* Favorite + Arrow icons */}
+          <div className="absolute top-3 right-3 flex items-center gap-1.5">
+            <FavoriteButton slug={slug} />
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl
+                            backdrop-blur-[40px] saturate-[180%]
+                            bg-gradient-to-b from-white/[0.1] to-white/[0.03]
+                            border border-white/[0.15]
+                            shadow-[inset_0_1px_0_rgba(255,255,255,0.15),0_4px_12px_-4px_rgba(0,0,0,0.4)]
+                            flex items-center justify-center
+                            opacity-70 sm:opacity-0 sm:-translate-y-1 sm:group-hover:opacity-100 sm:group-hover:translate-y-0
+                            transition-all duration-300">
+              <ArrowUpRight className="w-4 h-4 text-amber-300" />
+            </div>
           </div>
         </div>
 

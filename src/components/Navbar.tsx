@@ -3,7 +3,8 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ArrowRight, Search as SearchIcon, User, Settings, X } from "lucide-react";
+import { ArrowRight, Search as SearchIcon, User, Settings, X, Heart } from "lucide-react";
+import { AuthButton } from "@/components/AuthButton";
 import { Logo } from "@/components/Logo";
 import { SearchBar } from "@/components/SearchBar";
 import { getUsername } from "@/components/WelcomeScreen";
@@ -14,6 +15,7 @@ const navLinks = [
   { label: "Início", href: "/" },
   { label: "Blog", href: "/blog" },
   { label: "Categorias", href: "/#categories" },
+  { label: "Favoritos", href: "/favoritos" },
 ];
 
 interface NavbarProps {
@@ -253,37 +255,7 @@ export function Navbar({ allPosts }: NavbarProps) {
 
             {/* Right side (desktop only) */}
             <div className="hidden md:flex items-center gap-2">
-              {userName && (
-                <div className="flex items-center gap-1.5">
-                  <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full
-                              backdrop-blur-[40px] saturate-[180%] brightness-[105%]
-                              bg-gradient-to-b from-white/[0.07] to-white/[0.02]
-                              border border-white/[0.10]
-                              shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
-                    {avatarUrl ? (
-                      <div className="w-5 h-5 rounded-full overflow-hidden border border-amber-400/20 shrink-0">
-                        <img src={avatarUrl} alt="" className="w-full h-full object-cover" />
-                      </div>
-                    ) : (
-                      <User className="w-3.5 h-3.5 text-amber-400/80" />
-                    )}
-                    <span className="text-xs font-medium text-white/70 max-w-[100px] truncate">{userName}</span>
-                  </div>
-                  <Link
-                    href="/settings"
-                    className="flex items-center justify-center w-8 h-8 rounded-xl
-                               backdrop-blur-[40px] saturate-[180%] brightness-[105%]
-                               bg-gradient-to-b from-white/[0.07] to-white/[0.02]
-                               border border-white/[0.10]
-                               shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]
-                               hover:border-white/[0.22] active:scale-95
-                               transition-all duration-200"
-                    aria-label="Configurações"
-                  >
-                    <Settings className="w-3.5 h-3.5 text-white/50 hover:text-white/80 transition-colors" />
-                  </Link>
-                </div>
-              )}
+              <AuthButton />
 
               <SearchBar allPosts={allPosts} />
 

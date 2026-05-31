@@ -11,6 +11,8 @@ import { ScrollToTop } from "@/components/ScrollToTop";
 import { ThemeSync } from "@/components/ThemeSync";
 import { MouseOrb } from "@/components/MouseOrb";
 import { getAllPosts } from "@/lib/posts";
+import { SessionProvider } from "@/components/SessionProvider";
+import { FavoritesProvider } from "@/components/FavoritesProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -108,16 +110,20 @@ export default function RootLayout({
         <div className="light-leak light-leak--sky" aria-hidden />
         <BokehParticles />
 
-        <div className="relative z-10 min-h-screen flex flex-col">
-          <ScrollRevealInit />
-          <Navbar allPosts={allPosts} />
-          <main className="flex-1">
-            <PageTransition>{children}</PageTransition>
-          </main>
-          <Footer />
-        </div>
-        <ScrollToTop />
-        <MouseOrb />
+        <SessionProvider>
+          <FavoritesProvider>
+            <div className="relative z-10 min-h-screen flex flex-col">
+              <ScrollRevealInit />
+              <Navbar allPosts={allPosts} />
+              <main className="flex-1">
+                <PageTransition>{children}</PageTransition>
+              </main>
+              <Footer />
+            </div>
+            <ScrollToTop />
+            <MouseOrb />
+          </FavoritesProvider>
+        </SessionProvider>
       </body>
     </html>
   );

@@ -12,6 +12,7 @@ import {
 import { CategoryBadge } from "@/components/CategoryBadge";
 import { PostCard } from "@/components/PostCard";
 import { ShareButtons } from "@/components/ShareButtons";
+import { FavoriteButton } from "@/components/FavoriteButton";
 import { ProseEnhancer } from "@/components/ProseEnhancer";
 import { Comments } from "@/components/Comments";
 import type { Metadata } from "next";
@@ -139,10 +140,13 @@ export default async function PostPage({ params }: PostPageProps) {
                 <span>{frontmatter.readTime}</span>
               </div>
             </div>
-            <ShareButtons
-              url={`https://techmate.dev/blog/${slug}`}
-              title={frontmatter.title}
-            />
+            <div className="flex items-center gap-2">
+              <FavoriteButton slug={slug} size="md" />
+              <ShareButtons
+                url={`https://techmate.dev/blog/${slug}`}
+                title={frontmatter.title}
+              />
+            </div>
           </div>
 
           {/* Tags */}
