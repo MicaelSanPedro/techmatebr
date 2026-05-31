@@ -4,7 +4,7 @@ date: "2026-05-31"
 excerpt: "O Chromebook da escola bloqueia tudo? Sem problemas. Aprenda a jogar Minecraft direto no navegador usando o Eaglercraft, sem baixar nada e sem precisar de permissão de administrador."
 category: "Dicas"
 tags: ["chromebook", "minecraft", "eaglercraft", "escola", "jogos", "navegador", "dicas"]
-coverImage: "/posts/eaglercraft-chromebook.jpg"
+coverImage: "/posts/eaglercraft-chromebook-cover.jpg"
 readTime: "7 min"
 featured: true
 ---
