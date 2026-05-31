@@ -13,6 +13,7 @@ import { CategoryBadge } from "@/components/CategoryBadge";
 import { PostCard } from "@/components/PostCard";
 import { ShareButtons } from "@/components/ShareButtons";
 import { ProseEnhancer } from "@/components/ProseEnhancer";
+import { Comments } from "@/components/Comments";
 import type { Metadata } from "next";
 
 interface PostPageProps {
@@ -210,6 +211,9 @@ export default async function PostPage({ params }: PostPageProps) {
             </Link>
           </div>
         </div>
+
+        {/* Comments */}
+        <Comments slug={slug} />
 
         {/* Bottom nav */}
         <div className="mt-12 sm:mt-14 pt-6 border-t border-white/[0.06] flex items-center justify-between">
