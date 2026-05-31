@@ -7,29 +7,69 @@ interface FavoritesData {
 
 interface GistFile {
   filename: string;
-  content: string;
+  content: string | null;
 }
 
-interface GistItem {
+interface GistListItem {
   id: string;
   description: string;
   files: Record<string, GistFile>;
 }
 
+/**
+ * Find our TechMate gist ID from the list API,
+ * then fetch it individually to get file content
+ * (the list API does NOT return file content).
+ */
+async function findGistId(accessToken: string): Promise<string | null> {
+  const res = await fetch("https://api.github.com/gists?per_page=100", {
+    headers: { Authorization: `Bearer ${accessToken}`, Accept: "application/vnd.github.v3+json" },
+  });
+  if (!res.ok) {
+    console.error("[findGistId] GitHub API error:", res.status, res.statusText);
+    return null;
+  }
+  const gists: GistListItem[] = await res.json();
+  const gist = gists.find(
+    (g) => g.description === GIST_DESCRIPTION && g.files[GIST_FILENAME]
+  );
+  return gist?.id || null;
+}
+
+/**
+ * Fetch a single gist by ID — this returns file content.
+ */
+async function fetchGistById(accessToken: string, gistId: string): Promise<{ id: string; data: FavoritesData } | null> {
+  const res = await fetch(`https://api.github.com/gists/${gistId}`, {
+    headers: { Authorization: `Bearer ${accessToken}`, Accept: "application/vnd.github.v3+json" },
+  });
+  if (!res.ok) {
+    console.error("[fetchGistById] GitHub API error:", res.status, res.statusText);
+    return null;
+  }
+  const gist: GistListItem = await res.json();
+  const file = gist.files[GIST_FILENAME];
+  if (!file?.content) {
+    console.error("[fetchGistById] File found but content is null/empty");
+    return null;
+  }
+  try {
+    const data: FavoritesData = JSON.parse(file.content);
+    return { id: gist.id, data };
+  } catch (error) {
+    console.error("[fetchGistById] Failed to parse JSON:", error);
+    return null;
+  }
+}
+
+/**
+ * Find our gist and fetch its content.
+ */
 async function getGist(accessToken: string): Promise<{ id: string; data: FavoritesData } | null> {
   try {
-    const res = await fetch("https://api.github.com/gists", {
-      headers: { Authorization: `Bearer ${accessToken}`, Accept: "application/vnd.github.v3+json" },
-    });
-    if (!res.ok) {
-      console.error("[getGist] GitHub API error:", res.status, res.statusText);
-      return null;
-    }
-    const gists: GistItem[] = await res.json();
-    const gist = gists.find((g) => g.description === GIST_DESCRIPTION && g.files[GIST_FILENAME]);
-    if (!gist) return null;
-    const content = JSON.parse(gist.files[GIST_FILENAME].content);
-    return { id: gist.id, data: content };
+    const gistId = await findGistId(accessToken);
+    if (!gistId) return null;
+    return await fetchGistById(accessToken, gistId);
   } catch (error) {
     console.error("[getGist] Error:", error);
     return null;
@@ -97,11 +137,9 @@ export async function toggleFavorite(accessToken: string, slug: string): Promise
     const newId = await createGist(accessToken, data);
     success = !!newId;
   }
-  // Only return the toggled state if the save was successful
   if (!success) {
     console.error("[toggleFavorite] Failed to save favorites to Gist");
-    // Revert — return current state (not toggled)
-    return index > -1; // was favorited, remove failed, still favorited
+    return index > -1;
   }
-  return index === -1; // returns true if added, false if removed
+  return index === -1;
 }
