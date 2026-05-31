@@ -4,7 +4,7 @@ import { Heart } from "lucide-react";
 import { useFavorites } from "@/components/FavoritesProvider";
 import { openSignInModal } from "@/components/SignInModal";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 interface FavoriteButtonProps {
   slug: string;
@@ -16,7 +16,11 @@ export function FavoriteButton({ slug, className = "", size = "sm" }: FavoriteBu
   const { isFavorite, toggle, loading } = useFavorites();
   const { status } = useSession();
   const [animating, setAnimating] = useState(false);
-  const fav = isFavorite(slug);
+  // Optimistic state: overrides the real fav state until API responds
+  const optimisticFav = useRef<boolean | null>(null);
+
+  const realFav = isFavorite(slug);
+  const fav = optimisticFav.current !== null ? optimisticFav.current : realFav;
   const isLoggedIn = status === "authenticated";
 
   const handleToggle = async (e: React.MouseEvent) => {
@@ -26,10 +30,15 @@ export function FavoriteButton({ slug, className = "", size = "sm" }: FavoriteBu
       if (!isLoggedIn) openSignInModal();
       return;
     }
-    // Optimistic visual feedback — animate immediately
+    // Flip immediately (optimistic)
+    const nextState = !fav;
+    optimisticFav.current = nextState;
     setAnimating(true);
+    setTimeout(() => setAnimating(false), 200);
+
+    // Fire API call and sync back when done
     await toggle(slug);
-    setTimeout(() => setAnimating(false), 150);
+    optimisticFav.current = null; // let real state take over
   };
 
   const iconSize = size === "sm" ? "w-3.5 h-3.5" : "w-5 h-5";
@@ -37,7 +46,6 @@ export function FavoriteButton({ slug, className = "", size = "sm" }: FavoriteBu
   return (
     <button
       onClick={handleToggle}
-      disabled={loading}
       className={`flex items-center justify-center transition-all duration-150 ${
         size === "sm"
           ? "w-7 h-7 sm:w-8 sm:h-8 rounded-lg"
@@ -50,7 +58,7 @@ export function FavoriteButton({ slug, className = "", size = "sm" }: FavoriteBu
       title={fav ? "Remover dos favoritos" : "Adicionar aos favoritos"}
     >
       <Heart
-        className={`${iconSize} transition-all duration-150 ${
+        className={`${iconSize} transition-all duration-100 ${
           fav
             ? "text-rose-400 fill-rose-400"
             : "text-white/60 group-hover:text-white/80"
