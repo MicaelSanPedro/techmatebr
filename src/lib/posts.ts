@@ -9,6 +9,11 @@ import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import { codeToHtml } from "shiki";
 
+// @ts-ignore
+import { unified } from 'unified';
+// @ts-ignore
+import remarkParse from 'remark-parse';
+
 export interface PostFrontmatter {
   title: string;
   date: string;
@@ -105,7 +110,9 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
   const { slug: postSlug, frontmatter, content } = parsePostFile(fileName);
 
   // Process markdown to HTML with rehype pipeline
-  const processedContent = await remark()
+  // Using explicit casting to 'any' to bypass Unified type version mismatches in production build
+  const processedContent = await (unified() as any)
+    .use(remarkParse)
     .use(remarkGfm)
     .use(remarkRehype)
     .use(rehypeSlug)
@@ -116,8 +123,6 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
   let contentHtml = processedContent.toString();
 
   // Highlight code blocks with Shiki after basic HTML is generated
-  // This is a simple regex-based replacement for demo purposes, 
-  // though a rehype-shiki plugin would be more robust.
   const codeBlockRegex = /<pre><code class="language-([^"]+)">([\s\S]*?)<\/code><\/pre>/g;
   const matches = Array.from(contentHtml.matchAll(codeBlockRegex));
 
@@ -142,6 +147,41 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
     frontmatter,
     contentHtml,
   };
+}
+
+export function getPostsByCategory(category: string): PostSummary[] {
+  return getAllPosts().filter(
+    (post) => post.frontmatter.category.toLowerCase() === category.toLowerCase()
+  );
+}
+
+export function getAllCategories(): CategoryCount[] {
+  const posts = getAllPosts();
+  const categoryMap = new Map<string, number>();
+
+  posts.forEach((post) => {
+    const cat = post.frontmatter.category;
+    categoryMap.set(cat, (categoryMap.get(cat) || 0) + 1);
+  });
+
+  return Array.from(categoryMap.entries())
+    .map(([name, count]) => ({ name, count }))
+    .sort((a, b) => b.count - a.count);
+}
+
+export function getAllTags(): TagCount[] {
+  const posts = getAllPosts();
+  const tagMap = new Map<string, number>();
+
+  posts.forEach((post) => {
+    post.frontmatter.tags.forEach((tag) => {
+      tagMap.set(tag, (tagMap.get(tag) || 0) + 1);
+    });
+  });
+
+  return Array.from(tagMap.entries())
+    .map(([name, count]) => ({ name, count }))
+    .sort((a, b) => b.count - a.count);
 }
 
 export function getPostsByCategory(category: string): PostSummary[] {
