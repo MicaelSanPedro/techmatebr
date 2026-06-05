@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-import { getFavorites, toggleFavorite, migrateGistToKv } from "@/lib/favorites";
+import { getFavorites, toggleFavorite, migrateGistToRedis } from "@/lib/favorites";
 
 export async function GET() {
   try {
@@ -14,18 +14,18 @@ export async function GET() {
       return NextResponse.json({ favorites: [] });
     }
 
-    // First time: migrate GitHub Gist favorites to KV (if user has GitHub token)
+    // First time: migrate GitHub Gist favorites to Redis (if user has GitHub token)
     if (session.user.accessToken) {
-      const kvFavs = await getFavorites(email);
-      if (kvFavs.length === 0) {
+      const redisFavs = await getFavorites(email);
+      if (redisFavs.length === 0) {
         // Check if they have existing Gist favorites to migrate
-        const migrated = await migrateGistToKv(email, session.user.accessToken);
+        const migrated = await migrateGistToRedis(email, session.user.accessToken);
         return NextResponse.json({ favorites: migrated });
       }
-      return NextResponse.json({ favorites: kvFavs });
+      return NextResponse.json({ favorites: redisFavs });
     }
 
-    // Google users (or any user without GitHub token) - read from KV directly
+    // Google users (or any user without GitHub token) - read from Redis directly
     const favorites = await getFavorites(email);
     return NextResponse.json({ favorites });
   } catch (error) {

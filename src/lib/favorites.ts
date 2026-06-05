@@ -1,16 +1,36 @@
-import { kv } from "@vercel/kv";
+import Redis from "ioredis";
 
 const PREFIX = "techmate:favorites:";
+
+let redis: Redis | null = null;
+
+function getRedis(): Redis {
+  if (!redis) {
+    const url = process.env.REDIS_URL;
+    if (!url) {
+      throw new Error("REDIS_URL environment variable is not set");
+    }
+    redis = new Redis(url, {
+      maxRetriesPerRequest: 3,
+      retryStrategy(times) {
+        if (times > 3) return null;
+        return Math.min(times * 200, 2000);
+      },
+    });
+  }
+  return redis;
+}
 
 /**
  * Get favorites for a user by email (works for both GitHub and Google)
  */
 export async function getFavorites(email: string): Promise<string[]> {
   try {
-    const data = await kv.get<string[]>(`${PREFIX}${email}`);
-    return data || [];
+    const r = getRedis();
+    const data = await r.get(`${PREFIX}${email}`);
+    return data ? JSON.parse(data) : [];
   } catch (error) {
-    console.error("[getFavorites] KV error:", error);
+    console.error("[getFavorites] Redis error:", error);
     return [];
   }
 }
@@ -20,6 +40,7 @@ export async function getFavorites(email: string): Promise<string[]> {
  */
 export async function toggleFavorite(email: string, slug: string): Promise<boolean> {
   try {
+    const r = getRedis();
     const current = await getFavorites(email);
     const index = current.indexOf(slug);
     let updated: string[];
@@ -30,10 +51,10 @@ export async function toggleFavorite(email: string, slug: string): Promise<boole
       updated = [...current, slug];
     }
 
-    await kv.set(`${PREFIX}${email}`, updated);
+    await r.set(`${PREFIX}${email}`, JSON.stringify(updated));
     return index === -1;
   } catch (error) {
-    console.error("[toggleFavorite] KV error:", error);
+    console.error("[toggleFavorite] Redis error:", error);
     return index > -1;
   }
 }
@@ -87,10 +108,10 @@ async function fetchGistById(accessToken: string, gistId: string): Promise<strin
 }
 
 /**
- * Migrate favorites from GitHub Gist to KV store.
+ * Migrate favorites from GitHub Gist to Redis.
  * Called once when a GitHub user first accesses favorites after migration.
  */
-export async function migrateGistToKv(
+export async function migrateGistToRedis(
   email: string,
   accessToken: string
 ): Promise<string[]> {
@@ -101,12 +122,13 @@ export async function migrateGistToKv(
     const gistFavorites = await fetchGistById(accessToken, gistId);
     if (!gistFavorites || gistFavorites.length === 0) return [];
 
-    // Save to KV
-    await kv.set(`${PREFIX}${email}`, gistFavorites);
-    console.log(`[migrateGistToKv] Migrated ${gistFavorites.length} favorites from Gist to KV for ${email}`);
+    // Save to Redis
+    const r = getRedis();
+    await r.set(`${PREFIX}${email}`, JSON.stringify(gistFavorites));
+    console.log(`[migrateGistToRedis] Migrated ${gistFavorites.length} favorites from Gist to Redis for ${email}`);
     return gistFavorites;
   } catch (error) {
-    console.error("[migrateGistToKv] Error:", error);
+    console.error("[migrateGistToRedis] Error:", error);
     return [];
   }
 }
