@@ -274,24 +274,8 @@ export function Navbar({ allPosts }: NavbarProps) {
 
             {/* Right side (desktop only) */}
             <div className="hidden md:flex items-center gap-2 shrink-0">
-              <AuthButton />
-
               <SearchBar allPosts={allPosts} />
-
-              <Link
-                href="/blog"
-                className="hidden lg:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full
-                           bg-gradient-to-b from-amber-400/90 to-amber-500
-                           text-amber-950 text-xs font-semibold
-                           shadow-[0_4px_16px_-4px_rgba(249,189,24,0.5),inset_0_1px_0_rgba(255,255,255,0.4)]
-                           hover:shadow-[0_8px_24px_-4px_rgba(249,189,24,0.7),inset_0_1px_0_rgba(255,255,255,0.5)]
-                           hover:from-amber-300 hover:to-amber-400
-                           border border-amber-400/30
-                           transition-all"
-              >
-                Ler artigos
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
+              <AuthButton />
             </div>
           </div>
         </div>
