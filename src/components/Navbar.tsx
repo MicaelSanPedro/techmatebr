@@ -276,21 +276,6 @@ export function Navbar({ allPosts }: NavbarProps) {
             <div className="hidden md:flex items-center gap-2 shrink-0">
               <AuthButton />
 
-              <Link
-                href="/settings"
-                className="flex items-center justify-center w-8 h-8 rounded-xl
-                           backdrop-blur-[40px] saturate-[180%] brightness-[105%]
-                           bg-gradient-to-b from-white/[0.07] to-white/[0.02]
-                           border border-white/[0.10]
-                           shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]
-                           hover:border-white/[0.22] active:scale-95
-                           transition-all duration-200 shrink-0"
-                aria-label="Configurações"
-                title="Configurações"
-              >
-                <Settings className="w-3.5 h-3.5 text-white/50 hover:text-white/80 transition-colors" />
-              </Link>
-
               <SearchBar allPosts={allPosts} />
 
               <Link

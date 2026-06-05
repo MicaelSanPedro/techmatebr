@@ -1,7 +1,8 @@
 "use client";
 
 import { useSession, signOut } from "next-auth/react";
-import { LogOut } from "lucide-react";
+import { LogOut, Settings } from "lucide-react";
+import Link from "next/link";
 import { useFavorites } from "@/components/FavoritesProvider";
 import { openSignInModal } from "@/components/SignInModal";
 
@@ -51,7 +52,7 @@ export function AuthButton() {
         </svg>
         <span>{favorites.length > 0 ? favorites.length : ""}</span>
       </a>
-      <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/[0.04] border border-white/[0.08]">
+      <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-white/[0.04] border border-white/[0.08]">
         {session.user.image && (
           <img
             src={session.user.image}
@@ -60,9 +61,16 @@ export function AuthButton() {
             referrerPolicy="no-referrer"
           />
         )}
-        <span className="text-xs text-white/70 max-w-[80px] truncate hidden sm:inline">
+        <span className="text-xs text-white/70 max-w-[80px] truncate hidden xl:inline">
           {session.user.name || session.user.login || ""}
         </span>
+        <Link
+          href="/settings"
+          className="text-white/40 hover:text-white/70 transition-colors"
+          title="Configuracoes"
+        >
+          <Settings className="w-3.5 h-3.5" />
+        </Link>
         <button
           onClick={() => signOut({ callbackUrl: "/" })}
           className="text-white/40 hover:text-white/70 transition-colors"
