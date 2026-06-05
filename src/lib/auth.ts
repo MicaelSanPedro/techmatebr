@@ -14,4 +14,22 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       clientSecret: process.env.AUTH_GOOGLE_SECRET || "",
     }),
   ],
+  callbacks: {
+    async jwt({ token, account }) {
+      if (account?.access_token) {
+        token.accessToken = account.access_token;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (token) {
+        (session as any).user = {
+          ...session.user,
+          accessToken: token.accessToken,
+          login: (token as any).login,
+        };
+      }
+      return session;
+    },
+  },
 });
