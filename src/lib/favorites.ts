@@ -1,4 +1,4 @@
-import Redis from "ioredis";
+import { Redis } from "@upstash/redis";
 
 const PREFIX = "techmate:favorites:";
 
@@ -10,12 +10,8 @@ function getRedis(): Redis {
     if (!url) {
       throw new Error("REDIS_URL environment variable is not set");
     }
-    redis = new Redis(url, {
-      maxRetriesPerRequest: 3,
-      retryStrategy(times) {
-        if (times > 3) return null;
-        return Math.min(times * 200, 2000);
-      },
+    redis = new Redis({
+      url: url,
     });
   }
   return redis;
@@ -27,8 +23,8 @@ function getRedis(): Redis {
 export async function getFavorites(email: string): Promise<string[]> {
   try {
     const r = getRedis();
-    const data = await r.get(`${PREFIX}${email}`);
-    return data ? JSON.parse(data) : [];
+    const data = await r.get<string[]>(`${PREFIX}${email}`);
+    return data || [];
   } catch (error) {
     console.error("[getFavorites] Redis error:", error);
     return [];
@@ -51,7 +47,7 @@ export async function toggleFavorite(email: string, slug: string): Promise<boole
       updated = [...current, slug];
     }
 
-    await r.set(`${PREFIX}${email}`, JSON.stringify(updated));
+    await r.set(`${PREFIX}${email}`, updated);
     return index === -1;
   } catch (error) {
     console.error("[toggleFavorite] Redis error:", error);
@@ -124,7 +120,7 @@ export async function migrateGistToRedis(
 
     // Save to Redis
     const r = getRedis();
-    await r.set(`${PREFIX}${email}`, JSON.stringify(gistFavorites));
+    await r.set(`${PREFIX}${email}`, gistFavorites);
     console.log(`[migrateGistToRedis] Migrated ${gistFavorites.length} favorites from Gist to Redis for ${email}`);
     return gistFavorites;
   } catch (error) {
