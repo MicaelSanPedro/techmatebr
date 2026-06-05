@@ -12,6 +12,7 @@ function getRedis(): Redis {
     }
     redis = new Redis({
       url: url,
+      token: "", // Vercel Redis sets REDIS_URL with embedded auth; @upstash/redis uses it directly
     });
   }
   return redis;
@@ -51,7 +52,7 @@ export async function toggleFavorite(email: string, slug: string): Promise<boole
     return index === -1;
   } catch (error) {
     console.error("[toggleFavorite] Redis error:", error);
-    return index > -1;
+    return false;
   }
 }
 
