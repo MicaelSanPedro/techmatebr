@@ -13,3 +13,4 @@ export async function GET() {
     nextauthUrl: process.env.NEXTAUTH_URL || "MISSING",
   });
 }
+// trigger rebuild
