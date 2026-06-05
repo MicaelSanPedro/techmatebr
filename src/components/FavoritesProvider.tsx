@@ -19,6 +19,23 @@ const FavoritesContext = createContext<FavoritesContextType>({
   isLoggedIn: false,
 });
 
+const LS_KEY = "techmate-favorites";
+
+function getLocalFavorites(): string[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+function setLocalFavorites(favs: string[]) {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(LS_KEY, JSON.stringify(favs));
+}
+
 export function FavoritesProvider({ children }: { children: ReactNode }) {
   const [favorites, setFavorites] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
@@ -31,12 +48,19 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
       const res = await fetch("/api/favorites");
       if (res.ok) {
         const data = await res.json();
-        setFavorites(data.favorites || []);
+        const favs = data.favorites || [];
+        setFavorites(favs);
+        setLocalFavorites(favs);
         setIsLoggedIn(true);
       } else {
-        setIsLoggedIn(false);
+        // API failed (e.g. no GitHub token for Google user) — fallback to localStorage
+        const localFavs = getLocalFavorites();
+        setFavorites(localFavs);
+        setIsLoggedIn(true);
       }
     } catch {
+      const localFavs = getLocalFavorites();
+      setFavorites(localFavs);
       setIsLoggedIn(false);
     } finally {
       setLoading(false);
@@ -45,7 +69,7 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
 
   // Only fetch favorites when session is confirmed (not loading, not unauthenticated)
   useEffect(() => {
-    if (status === "loading") return; // still checking session
+    if (status === "loading") return;
     if (status === "authenticated") {
       fetchFavorites();
     } else {
@@ -64,12 +88,28 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
       });
       if (res.ok) {
         const { isFavorite: fav } = await res.json();
-        setFavorites((prev) =>
-          fav ? [...prev, slug] : prev.filter((s) => s !== slug)
-        );
+        setFavorites((prev) => {
+          const updated = fav ? [...prev, slug] : prev.filter((s) => s !== slug);
+          setLocalFavorites(updated);
+          return updated;
+        });
+      } else {
+        // API failed (e.g. Google user) — toggle locally
+        setFavorites((prev) => {
+          const isFav = prev.includes(slug);
+          const updated = isFav ? prev.filter((s) => s !== slug) : [...prev, slug];
+          setLocalFavorites(updated);
+          return updated;
+        });
       }
     } catch {
-      // Silently fail — the user can retry
+      // Network error — toggle locally
+      setFavorites((prev) => {
+        const isFav = prev.includes(slug);
+        const updated = isFav ? prev.filter((s) => s !== slug) : [...prev, slug];
+        setLocalFavorites(updated);
+        return updated;
+      });
     }
   }, []);
 
