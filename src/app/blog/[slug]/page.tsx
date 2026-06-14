@@ -6,11 +6,9 @@ import {
   Calendar,
   Clock,
   ArrowLeft,
-  ArrowRight,
   User,
 } from "lucide-react";
 import { CategoryBadge } from "@/components/CategoryBadge";
-import { PostCard } from "@/components/PostCard";
 import { ShareButtons } from "@/components/ShareButtons";
 import { FavoriteButton } from "@/components/FavoriteButton";
 import { ProseEnhancer } from "@/components/ProseEnhancer";
@@ -82,16 +80,6 @@ export default async function PostPage({ params }: PostPageProps) {
     frontmatter.coverImage &&
       (frontmatter.coverImage.startsWith("http") || frontmatter.coverImage.startsWith("/"))
   );
-
-  // Related posts (same category, excluding current)
-  const allPosts = getAllPosts();
-  const related = allPosts
-    .filter(
-      (p) =>
-        p.slug !== slug &&
-        p.frontmatter.category.toLowerCase() === frontmatter.category.toLowerCase()
-    )
-    .slice(0, 3);
 
   return (
     <div className="pt-24 sm:pt-28 pb-20 sm:pb-24 px-4 overflow-x-clip">
@@ -208,40 +196,16 @@ export default async function PostPage({ params }: PostPageProps) {
               Curtiu?
             </p>
             <p className="text-white/65 text-sm mb-4 sm:mb-5">
-              Compartilhe este artigo com outros devs ou explore mais sobre {frontmatter.category}.
+              Compartilhe este artigo com outros devs.
             </p>
             <ShareButtons
               url={`https://techmate.dev/blog/${slug}`}
               title={frontmatter.title}
-              className="mb-4"
             />
-            <div className="flex flex-col sm:flex-row gap-3">
-              <Link
-                href={`/blog?category=${encodeURIComponent(frontmatter.category)}`}
-                className="btn-primary justify-center"
-              >
-                Mais sobre {frontmatter.category}
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-              <Link href="/blog" className="btn-secondary justify-center">
-                Todos os artigos
-              </Link>
-            </div>
           </div>
 
           {/* Comments */}
           <Comments slug={slug} />
-
-          {/* Bottom nav */}
-          <div className="mt-12 sm:mt-14 pt-6 border-t border-white/[0.06] flex items-center justify-between">
-            <Link
-              href="/blog"
-              className="inline-flex items-center gap-2 text-amber-300 hover:text-amber-200 transition-colors group text-sm sm:text-base"
-            >
-              <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
-              Ver todos os artigos
-            </Link>
-          </div>
         </article>
 
         {/* Sidebar */}
@@ -249,30 +213,6 @@ export default async function PostPage({ params }: PostPageProps) {
           <TableOfContents />
         </aside>
       </div>
-
-      {/* Related posts */}
-      {related.length > 0 && (
-        <section className="max-w-7xl mx-auto mt-20 sm:mt-24" data-scroll-reveal>
-          <div className="mb-8 sm:mb-12 max-w-3xl">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="w-5 sm:w-6 h-px bg-gradient-to-r from-amber-400 to-transparent" />
-              <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.2em] text-amber-300/80 font-medium">
-                Relacionados
-              </span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
-              Continue lendo
-            </h2>
-          </div>
-          <div className="cv-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
-            {related.map((p, i) => (
-              <div key={p.slug} data-scroll-reveal data-scroll-delay={`${i * 100}`}>
-                <PostCard post={p} />
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
     </div>
   );
 }

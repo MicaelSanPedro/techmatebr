@@ -1,25 +1,9 @@
-import { Suspense } from "react";
-import { getAllPosts, getAllCategories } from "@/lib/posts";
+import { getAllPosts } from "@/lib/posts";
 import { PostCard } from "@/components/PostCard";
-import { CategoryFilter } from "@/components/CategoryFilter";
-import { Search, Layers } from "lucide-react";
-import Link from "next/link";
+import { Layers } from "lucide-react";
 
-interface BlogPageProps {
-  searchParams: Promise<{ category?: string; tag?: string }>;
-}
-
-export default async function BlogPage({ searchParams }: BlogPageProps) {
-  const params = await searchParams;
+export default async function BlogPage() {
   const allPosts = getAllPosts();
-  const categories = getAllCategories();
-
-  const selectedCategory = params.category;
-  const filteredPosts = selectedCategory
-    ? allPosts.filter(
-        (p) => p.frontmatter.category.toLowerCase() === selectedCategory.toLowerCase()
-      )
-    : allPosts;
 
   return (
     <div className="pt-24 sm:pt-32 lg:pt-36 pb-20 sm:pb-24 px-4">
@@ -33,56 +17,25 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
             </span>
           </div>
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-4 sm:mb-5 tracking-tight leading-[1.05] text-balance">
-            {selectedCategory ? (
-              <>
-                Categoria:{" "}
-                <span className="shimmer-text">{selectedCategory}</span>
-              </>
-            ) : (
-              <>
-                Todos os <span className="shimmer-text">artigos</span>
-              </>
-            )}
+            Todos os <span className="shimmer-text">artigos</span>
           </h1>
           <p className="text-sm sm:text-base lg:text-lg text-white/45 text-pretty">
-            {selectedCategory
-              ? `Mostrando ${filteredPosts.length} artigo${
-                  filteredPosts.length === 1 ? "" : "s"
-                } na categoria ${selectedCategory}.`
-              : `Explore os ${allPosts.length} artigos do blog — filtrados por categoria ou explore a biblioteca completa.`}
+            Explore os {allPosts.length} artigos do blog.
           </p>
         </div>
 
-        {/* ── Filter pills (scroll horizontal no mobile) ── */}
-        <Suspense>
-          <CategoryFilter categories={categories} totalPosts={allPosts.length} />
-        </Suspense>
-
         {/* ── Posts Grid ── */}
-        {filteredPosts.length > 0 ? (
-          <div className="cv-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
-            {filteredPosts.map((post, i) => (
-              <div
-                key={post.slug}
-                data-scroll-reveal
-                data-scroll-delay={`${Math.min(i, 6) * 80}`}
-              >
-                <PostCard post={post} />
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-16 sm:py-24 px-6 rounded-2xl sm:rounded-3xl border border-white/[0.06] bg-white/[0.02]">
-            <Search className="w-10 h-10 mx-auto text-white/20 mb-4" />
-            <p className="text-white/45 text-base sm:text-lg mb-4">Nenhum artigo encontrado.</p>
-            <Link
-              href="/blog"
-              className="btn-secondary inline-flex"
+        <div className="cv-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
+          {allPosts.map((post, i) => (
+            <div
+              key={post.slug}
+              data-scroll-reveal
+              data-scroll-delay={`${Math.min(i, 6) * 80}`}
             >
-              Ver todos os artigos
-            </Link>
-          </div>
-        )}
+              <PostCard post={post} />
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
