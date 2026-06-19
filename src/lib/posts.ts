@@ -9,11 +9,6 @@ import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import { codeToHtml } from "shiki";
 
-// @ts-ignore
-import { unified } from 'unified';
-// @ts-ignore
-import remarkParse from 'remark-parse';
-
 export interface PostFrontmatter {
   title: string;
   date: string;
@@ -109,10 +104,12 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
 
   const { slug: postSlug, frontmatter, content } = parsePostFile(fileName);
 
-  // Process markdown to HTML with rehype pipeline
-  // Using explicit casting to 'any' to bypass Unified type version mismatches in production build
-  const processedContent = await (unified() as any)
-    .use(remarkParse)
+  // remark() is pre-configured with remark-parse.
+  // Single cast to bypass mdast version mismatch between remark and rehype
+  // packages in the unified ecosystem. This is a known upstream type issue.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const pipeline = remark() as any;
+  const processedContent = await pipeline
     .use(remarkGfm)
     .use(remarkRehype)
     .use(rehypeSlug)

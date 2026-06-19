@@ -40,6 +40,14 @@ html:not(.dark) {
   --surface-2: rgba(0, 0, 0, 0.05);
   --border-1: rgba(0, 0, 0, 0.08);
   --border-2: rgba(0, 0, 0, 0.12);
+
+  /* ─── Light mode text mapping (used to override dark-mode Tailwind utilities) ─── */
+  --lm-r: 30; --lm-g: 30; --lm-b: 30;
+  --lm-amber: #b45309;
+  --lm-amber-deep: #92400e;
+  --lm-sky: #0369a1;
+  --lm-emerald: #047857;
+  --lm-lime: #4d7c0f;
 }
 html:not(.dark) body {
   background: var(--background);
@@ -48,11 +56,11 @@ html:not(.dark) body {
 /* Light mode: glass surfaces become light */
 html:not(.dark) .glass-nav,
 html:not(.dark) .liquid-glass-mobile-menu {
-  background: rgba(255, 255, 255, 0.72) !important;
-  border-color: rgba(0, 0, 0, 0.08) !important;
+  background: rgba(255, 255, 255, 0.72);
+  border-color: rgba(0, 0, 0, 0.08);
 }
 html:not(.dark) .glass-nav.scrolled {
-  background: rgba(255, 255, 255, 0.85) !important;
+  background: rgba(255, 255, 255, 0.85);
 }
 html:not(.dark) .site-backdrop {
   background: #f8f7f5;
@@ -70,9 +78,9 @@ html:not(.dark) .cinema-grain {
   opacity: 0.015;
 }
 html:not(.dark) .liquid-glass-card {
-  background: rgba(255, 255, 255, 0.6) !important;
-  border-color: rgba(0, 0, 0, 0.06) !important;
-  box-shadow: 0 8px 32px -8px rgba(0,0,0,0.08) !important;
+  background: rgba(255, 255, 255, 0.6);
+  border-color: rgba(0, 0, 0, 0.06);
+  box-shadow: 0 8px 32px -8px rgba(0,0,0,0.08);
 }
 html:not(.dark) .post-card {
   background: rgba(255, 255, 255, 0.6);
@@ -95,27 +103,27 @@ html:not(.dark) .prose-custom code {
   color: rgba(30, 30, 30, 0.8);
 }
 html:not(.dark) .prose-custom pre {
-  background: rgba(0, 0, 0, 0.04) !important;
-  border-color: rgba(0, 0, 0, 0.08) !important;
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.08);
 }
 html:not(.dark) .prose-custom th {
-  background: rgba(249, 189, 24, 0.06) !important;
-  color: #92400e !important;
+  background: rgba(249, 189, 24, 0.06);
+  color: #92400e;
 }
 html:not(.dark) .prose-custom td {
-  color: rgba(30, 30, 30, 0.65) !important;
-  border-color: rgba(0, 0, 0, 0.05) !important;
+  color: rgba(30, 30, 30, 0.65);
+  border-color: rgba(0, 0, 0, 0.05);
 }
 html:not(.dark) .prose-custom td:first-child,
 html:not(.dark) .prose-custom th:first-child {
-  color: rgba(30, 30, 30, 0.8) !important;
+  color: rgba(30, 30, 30, 0.8);
 }
 html:not(.dark) .prose-custom a {
   color: #b45309;
 }
 html:not(.dark) .prose-custom blockquote {
-  border-color: rgba(249, 189, 24, 0.3) !important;
-  background: rgba(249, 189, 24, 0.04) !important;
+  border-color: rgba(249, 189, 24, 0.3);
+  background: rgba(249, 189, 24, 0.04);
 }
 html:not(.dark) .prose-custom {
   --tw-prose-body: rgba(30, 30, 30, 0.7);
@@ -130,8 +138,8 @@ html:not(.dark) .shimmer-text {
   background-clip: text;
 }
 html:not(.dark) .settings-panel {
-  background: rgba(255, 255, 255, 0.9) !important;
-  border-color: rgba(0, 0, 0, 0.08) !important;
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(0, 0, 0, 0.08);
 }
 html:not(.dark) .settings-panel span,
 html:not(.dark) .settings-panel p {
@@ -165,78 +173,86 @@ html:not(.dark) .welcome-progress-track {
   background: rgba(0, 0, 0, 0.06);
 }
 html:not(.dark) .footer-glass {
-  background: rgba(255, 255, 255, 0.7) !important;
-  border-color: rgba(0, 0, 0, 0.06) !important;
+  background: rgba(255, 255, 255, 0.7);
+  border-color: rgba(0, 0, 0, 0.06);
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   COMPREHENSIVE LIGHT MODE SYSTEM
-   Maps all white-on-dark text to dark-on-light equivalents
+   LIGHT MODE — TEXT COLOR MAPPING
+   Unlayered CSS beats Tailwind @layer utilities, so !important
+   is NOT needed for these class-to-class overrides.
+   Custom properties (--lm-*) centralize values for easy theming.
    ═══════════════════════════════════════════════════════════════ */
 
 /* ── Text: white → dark (all opacity levels) ── */
-html:not(.dark) .text-white { color: #1a1a1a !important; }
-html:not(.dark) .text-white\/90 { color: rgba(30,30,30,0.9) !important; }
-html:not(.dark) .text-white\/85 { color: rgba(30,30,30,0.85) !important; }
-html:not(.dark) .text-white\/80 { color: rgba(30,30,30,0.8) !important; }
-html:not(.dark) .text-white\/75 { color: rgba(30,30,30,0.75) !important; }
-html:not(.dark) .text-white\/70 { color: rgba(30,30,30,0.7) !important; }
-html:not(.dark) .text-white\/65 { color: rgba(30,30,30,0.65) !important; }
-html:not(.dark) .text-white\/60 { color: rgba(30,30,30,0.6) !important; }
-html:not(.dark) .text-white\/55 { color: rgba(30,30,30,0.55) !important; }
-html:not(.dark) .text-white\/50 { color: rgba(30,30,30,0.5) !important; }
-html:not(.dark) .text-white\/45 { color: rgba(30,30,30,0.45) !important; }
-html:not(.dark) .text-white\/40 { color: rgba(30,30,30,0.4) !important; }
-html:not(.dark) .text-white\/35 { color: rgba(30,30,30,0.35) !important; }
-html:not(.dark) .text-white\/30 { color: rgba(30,30,30,0.3) !important; }
-html:not(.dark) .text-white\/25 { color: rgba(30,30,30,0.25) !important; }
-html:not(.dark) .text-white\/20 { color: rgba(30,30,30,0.2) !important; }
-html:not(.dark) .text-white\/15 { color: rgba(30,30,30,0.15) !important; }
+html:not(.dark) .text-white { color: rgb(var(--lm-r), var(--lm-g), var(--lm-b)); }
+html:not(.dark) .text-white\/90 { color: rgb(var(--lm-r), var(--lm-g), var(--lm-b) / 0.9); }
+html:not(.dark) .text-white\/85 { color: rgb(var(--lm-r), var(--lm-g), var(--lm-b) / 0.85); }
+html:not(.dark) .text-white\/80 { color: rgb(var(--lm-r), var(--lm-g), var(--lm-b) / 0.8); }
+html:not(.dark) .text-white\/75 { color: rgb(var(--lm-r), var(--lm-g), var(--lm-b) / 0.75); }
+html:not(.dark) .text-white\/70 { color: rgb(var(--lm-r), var(--lm-g), var(--lm-b) / 0.7); }
+html:not(.dark) .text-white\/65 { color: rgb(var(--lm-r), var(--lm-g), var(--lm-b) / 0.65); }
+html:not(.dark) .text-white\/60 { color: rgb(var(--lm-r), var(--lm-g), var(--lm-b) / 0.6); }
+html:not(.dark) .text-white\/55 { color: rgb(var(--lm-r), var(--lm-g), var(--lm-b) / 0.55); }
+html:not(.dark) .text-white\/50 { color: rgb(var(--lm-r), var(--lm-g), var(--lm-b) / 0.5); }
+html:not(.dark) .text-white\/45 { color: rgb(var(--lm-r), var(--lm-g), var(--lm-b) / 0.45); }
+html:not(.dark) .text-white\/40 { color: rgb(var(--lm-r), var(--lm-g), var(--lm-b) / 0.4); }
+html:not(.dark) .text-white\/35 { color: rgb(var(--lm-r), var(--lm-g), var(--lm-b) / 0.35); }
+html:not(.dark) .text-white\/30 { color: rgb(var(--lm-r), var(--lm-g), var(--lm-b) / 0.3); }
+html:not(.dark) .text-white\/25 { color: rgb(var(--lm-r), var(--lm-g), var(--lm-b) / 0.25); }
+html:not(.dark) .text-white\/20 { color: rgb(var(--lm-r), var(--lm-g), var(--lm-b) / 0.2); }
+html:not(.dark) .text-white\/15 { color: rgb(var(--lm-r), var(--lm-g), var(--lm-b) / 0.15); }
 
 /* ── Colored text: light variants → dark readable variants ── */
-html:not(.dark) .text-amber-100 { color: #92400e !important; }
-html:not(.dark) .text-amber-200 { color: #b45309 !important; }
-html:not(.dark) .text-amber-300 { color: #b45309 !important; }
-html:not(.dark) .text-amber-300\/80 { color: #b45309 !important; }
-html:not(.dark) .text-sky-300 { color: #0369a1 !important; }
-html:not(.dark) .text-sky-300\/80 { color: #0369a1 !important; }
-html:not(.dark) .text-emerald-300 { color: #047857 !important; }
-html:not(.dark) .text-emerald-300\/80 { color: #047857 !important; }
-html:not(.dark) .text-lime-300 { color: #4d7c0f !important; }
-html:not(.dark) .text-lime-300\/80 { color: #4d7c0f !important; }
+html:not(.dark) .text-amber-100 { color: var(--lm-amber-deep); }
+html:not(.dark) .text-amber-200 { color: var(--lm-amber); }
+html:not(.dark) .text-amber-300 { color: var(--lm-amber); }
+html:not(.dark) .text-amber-300\/80 { color: var(--lm-amber); }
+html:not(.dark) .text-sky-300 { color: var(--lm-sky); }
+html:not(.dark) .text-sky-300\/80 { color: var(--lm-sky); }
+html:not(.dark) .text-emerald-300 { color: var(--lm-emerald); }
+html:not(.dark) .text-emerald-300\/80 { color: var(--lm-emerald); }
+html:not(.dark) .text-lime-300 { color: var(--lm-lime); }
+html:not(.dark) .text-lime-300\/80 { color: var(--lm-lime); }
 
 /* ── Placeholder text ── */
 html:not(.dark) input::placeholder,
 html:not(.dark) textarea::placeholder {
-  color: rgba(30, 30, 30, 0.3) !important;
+  color: rgb(var(--lm-r), var(--lm-g), var(--lm-b) / 0.3);
 }
 
 /* ── Selection ── */
 html:not(.dark) ::selection {
-  color: #1a1a1a;
+  color: var(--foreground);
 }
 
 /* ── Gradient muted text ── */
 html:not(.dark) .gradient-text-muted {
-  background: linear-gradient(180deg, rgba(30,30,30,0.95) 0%, rgba(30,30,30,0.55) 100%);
+  background: linear-gradient(180deg, rgb(var(--lm-r), var(--lm-g), var(--lm-b) / 0.95) 0%, rgb(var(--lm-r), var(--lm-g), var(--lm-b) / 0.55) 100%);
   -webkit-background-clip: text;
   background-clip: text;
 }
 
 /* ── Button: secondary ── */
 html:not(.dark) .btn-secondary {
-  color: rgba(30, 30, 30, 0.85) !important;
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.04) 0%, rgba(0, 0, 0, 0.02) 100%) !important;
-  border-color: rgba(0, 0, 0, 0.08) !important;
+  color: rgb(var(--lm-r), var(--lm-g), var(--lm-b) / 0.85);
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.04) 0%, rgba(0, 0, 0, 0.02) 100%);
+  border-color: rgba(0, 0, 0, 0.08);
 }
 html:not(.dark) .btn-secondary:hover {
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.06) 0%, rgba(0, 0, 0, 0.03) 100%) !important;
-  border-color: rgba(0, 0, 0, 0.12) !important;
-  color: #1a1a1a !important;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.06) 0%, rgba(0, 0, 0, 0.03) 100%);
+  border-color: rgba(0, 0, 0, 0.12);
+  color: var(--foreground);
 }
 html:not(.dark) .btn-secondary::before {
-  background: linear-gradient(135deg, rgba(0,0,0,0.03) 0%, transparent 100%) !important;
+  background: linear-gradient(135deg, rgba(0,0,0,0.03) 0%, transparent 100%);
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   LIGHT MODE — GLASS SURFACES
+   These override Tailwind utility variables (--tw-*) so
+   !important IS needed to win over Tailwind internals.
+   ═══════════════════════════════════════════════════════════════ */
 
 /* ── Glass surfaces: gradient stops (white → dark tint) ── */
 html:not(.dark) [class*="from-white\/"] {
@@ -258,32 +274,38 @@ html:not(.dark) [class*="bg-white\/"] {
 
 /* ── Liquid glass panel (SearchBar dropdown) ── */
 html:not(.dark) .liquid-glass-panel {
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.88) 0%, rgba(255, 255, 255, 0.94) 100%) !important;
-  border-color: rgba(0, 0, 0, 0.06) !important;
-  box-shadow: 0 16px 48px -12px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.5) !important;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.88) 0%, rgba(255, 255, 255, 0.94) 100%);
+  border-color: rgba(0, 0, 0, 0.06);
+  box-shadow: 0 16px 48px -12px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
 /* ── Category badges: bg/text/border for light mode ── */
-html:not(.dark) .bg-amber-900\/60 { background: rgba(254, 243, 199, 0.7) !important; }
-html:not(.dark) .bg-sky-900\/60 { background: rgba(224, 242, 254, 0.7) !important; }
-html:not(.dark) .bg-emerald-900\/60 { background: rgba(209, 250, 229, 0.7) !important; }
-html:not(.dark) .bg-rose-900\/60 { background: rgba(255, 241, 242, 0.7) !important; }
-html:not(.dark) .bg-violet-900\/60 { background: rgba(237, 233, 254, 0.7) !important; }
-html:not(.dark) .bg-cyan-900\/60 { background: rgba(207, 250, 254, 0.7) !important; }
-html:not(.dark) .bg-lime-900\/60 { background: rgba(236, 252, 203, 0.7) !important; }
-html:not(.dark) .border-amber-500\/50 { border-color: rgba(217, 119, 6, 0.25) !important; }
-html:not(.dark) .border-sky-500\/50 { border-color: rgba(14, 165, 233, 0.25) !important; }
-html:not(.dark) .border-emerald-500\/50 { border-color: rgba(16, 185, 129, 0.25) !important; }
-html:not(.dark) .border-rose-500\/50 { border-color: rgba(244, 63, 94, 0.25) !important; }
-html:not(.dark) .border-violet-500\/50 { border-color: rgba(139, 92, 246, 0.25) !important; }
-html:not(.dark) .border-cyan-500\/50 { border-color: rgba(6, 182, 212, 0.25) !important; }
-html:not(.dark) .border-lime-500\/50 { border-color: rgba(132, 204, 22, 0.25) !important; }
+html:not(.dark) .bg-amber-900\/60 { background: rgba(254, 243, 199, 0.7); }
+html:not(.dark) .bg-sky-900\/60 { background: rgba(224, 242, 254, 0.7); }
+html:not(.dark) .bg-emerald-900\/60 { background: rgba(209, 250, 229, 0.7); }
+html:not(.dark) .bg-rose-900\/60 { background: rgba(255, 241, 242, 0.7); }
+html:not(.dark) .bg-violet-900\/60 { background: rgba(237, 233, 254, 0.7); }
+html:not(.dark) .bg-cyan-900\/60 { background: rgba(207, 250, 254, 0.7); }
+html:not(.dark) .bg-lime-900\/60 { background: rgba(236, 252, 203, 0.7); }
+html:not(.dark) .border-amber-500\/50 { border-color: rgba(217, 119, 6, 0.25); }
+html:not(.dark) .border-sky-500\/50 { border-color: rgba(14, 165, 233, 0.25); }
+html:not(.dark) .border-emerald-500\/50 { border-color: rgba(16, 185, 129, 0.25); }
+html:not(.dark) .border-rose-500\/50 { border-color: rgba(244, 63, 94, 0.25); }
+html:not(.dark) .border-violet-500\/50 { border-color: rgba(139, 92, 246, 0.25); }
+html:not(.dark) .border-cyan-500\/50 { border-color: rgba(6, 182, 212, 0.25); }
+html:not(.dark) .border-lime-500\/50 { border-color: rgba(132, 204, 22, 0.25); }
 
 /* ── Nav scrolled: lighter shadow ── */
 html:not(.dark) .glass-nav.scrolled {
-  box-shadow: 0 8px 32px -8px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.5) !important;
-  border-bottom-color: rgba(0, 0, 0, 0.06) !important;
+  box-shadow: 0 8px 32px -8px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  border-bottom-color: rgba(0, 0, 0, 0.06);
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   LIGHT MODE — PSEUDO-ELEMENTS & NESTED COMPONENTS
+   !important needed for ::before/::after pseudo-elements and
+   complex selectors that override base component styles.
+   ═══════════════════════════════════════════════════════════════ */
 
 /* ── Nav specular highlights ── */
 html:not(.dark) .glass-nav::before {
@@ -295,50 +317,50 @@ html:not(.dark) .liquid-glass-mobile-menu::before {
 
 /* ── Settings panel refinements ── */
 html:not(.dark) .settings-input {
-  background: rgba(0, 0, 0, 0.03) !important;
-  border-color: rgba(0, 0, 0, 0.1) !important;
-  color: rgba(30, 30, 30, 0.85) !important;
+  background: rgba(0, 0, 0, 0.03);
+  border-color: rgba(0, 0, 0, 0.1);
+  color: rgb(var(--lm-r), var(--lm-g), var(--lm-b) / 0.85);
 }
 html:not(.dark) .settings-input:focus {
-  border-color: rgba(249, 189, 24, 0.4) !important;
-  box-shadow: 0 0 0 2px rgba(249, 189, 24, 0.1) !important;
+  border-color: rgba(249, 189, 24, 0.4);
+  box-shadow: 0 0 0 2px rgba(249, 189, 24, 0.1);
 }
 html:not(.dark) .settings-btn-cancel {
-  border-color: rgba(0, 0, 0, 0.08) !important;
-  background: rgba(0, 0, 0, 0.03) !important;
-  color: rgba(30, 30, 30, 0.5) !important;
+  border-color: rgba(0, 0, 0, 0.08);
+  background: rgba(0, 0, 0, 0.03);
+  color: rgb(var(--lm-r), var(--lm-g), var(--lm-b) / 0.5);
 }
 html:not(.dark) .settings-btn-cancel:hover {
-  background: rgba(0, 0, 0, 0.06) !important;
+  background: rgba(0, 0, 0, 0.06);
 }
 html:not(.dark) .settings-divider {
-  background: linear-gradient(90deg, transparent, rgba(0,0,0,0.06), transparent) !important;
+  background: linear-gradient(90deg, transparent, rgba(0,0,0,0.06), transparent);
 }
 
 /* ── Search bar ── */
 html:not(.dark) .search-glow:focus-within {
-  box-shadow: 0 0 0 3px rgba(249, 189, 24, 0.1), 0 8px 32px -8px rgba(249, 189, 24, 0.08) !important;
-  border-color: rgba(249, 189, 24, 0.3) !important;
+  box-shadow: 0 0 0 3px rgba(249, 189, 24, 0.1), 0 8px 32px -8px rgba(249, 189, 24, 0.08);
+  border-color: rgba(249, 189, 24, 0.3);
 }
 
 /* ── Welcome screen name input ── */
 html:not(.dark) .welcome-name-heading {
-  color: rgba(30, 30, 30, 0.85) !important;
+  color: rgb(var(--lm-r), var(--lm-g), var(--lm-b) / 0.85);
 }
 html:not(.dark) .welcome-name-input {
-  background: rgba(0, 0, 0, 0.03) !important;
-  border-color: rgba(0, 0, 0, 0.1) !important;
-  color: rgba(30, 30, 30, 0.9) !important;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5) !important;
+  background: rgba(0, 0, 0, 0.03);
+  border-color: rgba(0, 0, 0, 0.1);
+  color: rgb(var(--lm-r), var(--lm-g), var(--lm-b) / 0.9);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 html:not(.dark) .welcome-name-input:focus {
-  border-color: rgba(249, 189, 24, 0.4) !important;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 0 0 3px rgba(249, 189, 24, 0.1) !important;
+  border-color: rgba(249, 189, 24, 0.4);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 0 0 3px rgba(249, 189, 24, 0.1);
 }
 
 /* ── Scrollbar ── */
 html:not(.dark) ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, rgba(249,189,24,0.4), rgba(203,140,10,0.4)) !important;
+  background: linear-gradient(180deg, rgba(249,189,24,0.4), rgba(203,140,10,0.4));
 }
 html:not(.dark) {
   scrollbar-color: rgba(249, 189, 24, 0.4) transparent;
@@ -346,15 +368,20 @@ html:not(.dark) {
 
 /* ── Card shine: dark highlight for light mode ── */
 html:not(.dark) .card-shine::after {
-  background: linear-gradient(to bottom right, transparent 35%, rgba(0,0,0,0.04) 45%, rgba(0,0,0,0.02) 55%, transparent 65%) !important;
+  background: linear-gradient(to bottom right, transparent 35%, rgba(0,0,0,0.04) 45%, rgba(0,0,0,0.02) 55%, transparent 65%);
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   LIGHT MODE — CATEGORY CARDS
+   Pseudo-element overrides require !important.
+   ═══════════════════════════════════════════════════════════════ */
 
 /* ── Category cards: light mode ── */
 html:not(.dark) .category-card {
-  background: linear-gradient(135deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.35) 50%, rgba(255,255,255,0.2) 100%) !important;
-  box-shadow: 0 8px 32px -8px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.5) !important;
-  backdrop-filter: blur(40px) saturate(180%) brightness(102%) !important;
-  -webkit-backdrop-filter: blur(40px) saturate(180%) brightness(102%) !important;
+  background: linear-gradient(135deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.35) 50%, rgba(255,255,255,0.2) 100%);
+  box-shadow: 0 8px 32px -8px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.5);
+  backdrop-filter: blur(40px) saturate(180%) brightness(102%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%) brightness(102%);
 }
 /* Specular top highlight */
 html:not(.dark) .category-card > div:first-child {
@@ -370,45 +397,49 @@ html:not(.dark) .category-card > div:nth-child(3) {
 }
 /* Glow blob: reduce opacity */
 html:not(.dark) .category-card > div:nth-child(4) {
-  opacity: 0.08 !important;
+  opacity: 0.08;
 }
 html:not(.dark) .category-card:hover > div:nth-child(4) {
-  opacity: 0.15 !important;
+  opacity: 0.15;
 }
 /* Icon container shadow */
 html:not(.dark) .category-card [class*="rounded-xl"][style*="box-shadow"] {
-  box-shadow: 0 4px 12px -4px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.5) !important;
+  box-shadow: 0 4px 12px -4px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.5);
 }
 /* Arrow container shadow */
 html:not(.dark) .category-card div[class*="opacity-60"][style*="box-shadow"] {
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.4) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.4);
 }
 /* Article count pill */
 html:not(.dark) .category-card div[class*="rounded-full"][style*="border"] {
-  background: rgba(0, 0, 0, 0.03) !important;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.4) !important;
+  background: rgba(0, 0, 0, 0.03);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.4);
 }
 /* Border glow on hover */
 html:not(.dark) .category-card > div:last-child {
-  box-shadow: 0 0 0 1px rgba(0,0,0,0.05) inset, 0 12px 40px -10px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.3) !important;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.05) inset, 0 12px 40px -10px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.3);
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   LIGHT MODE — MOBILE & NAV
+   ═══════════════════════════════════════════════════════════════ */
 
 /* ── Mobile menu: light mode shadows ── */
 html:not(.dark) .liquid-glass-mobile-menu {
-  box-shadow: 0 16px 48px -12px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.5) !important;
+  box-shadow: 0 16px 48px -12px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 /* Nav buttons (hamburger, search, settings) */
 html:not(.dark) nav button[class*="shadow-"],
 html:not(.dark) nav a[class*="shadow-"] {
-  --tw-shadow: 0 4px 12px -4px rgba(0,0,0,0.06) !important;
-  --tw-shadow-colored: 0 4px 12px -4px rgba(0,0,0,0.06) !important;
-  box-shadow: var(--tw-shadow-offset, 0 0 0 0) var(--tw-ring-offset, 0 0 0 0) var(--tw-ring, 0 0 0 0), var(--tw-shadow) !important;
+  --tw-shadow: 0 4px 12px -4px rgba(0,0,0,0.06);
+  --tw-shadow-colored: 0 4px 12px -4px rgba(0,0,0,0.06);
+  box-shadow: var(--tw-shadow-offset, 0 0 0 0) var(--tw-ring-offset, 0 0 0 0) var(--tw-ring, 0 0 0 0), var(--tw-shadow);
 }
 /* Mobile menu links */
 html:not(.dark) .liquid-glass-mobile-menu a[class*="shadow-"] {
-  --tw-shadow: inset 0 1px 0 rgba(255,255,255,0.3) !important;
-  --tw-shadow-colored: inset 0 1px 0 rgba(255,255,255,0.3) !important;
-  box-shadow: var(--tw-shadow-offset, 0 0 0 0) var(--tw-ring-offset, 0 0 0 0) var(--tw-ring, 0 0 0 0), var(--tw-shadow) !important;
+  --tw-shadow: inset 0 1px 0 rgba(255,255,255,0.3);
+  --tw-shadow-colored: inset 0 1px 0 rgba(255,255,255,0.3);
+  box-shadow: var(--tw-shadow-offset, 0 0 0 0) var(--tw-ring-offset, 0 0 0 0) var(--tw-ring, 0 0 0 0), var(--tw-shadow);
 }
 
 @layer base {

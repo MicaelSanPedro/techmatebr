@@ -5,7 +5,7 @@ import { Logo } from "@/components/Logo";
 const categoryLinks = [
   { label: "Linux", href: "/blog?category=Linux" },
   { label: "Windows", href: "/blog?category=Windows" },
-  { label: "Desenvolvimento", href: "/blog?category=Dev" },
+  { label: "Desenvolvimento", href: "/blog?category=Desenvolvimento" },
   { label: "Segurança", href: "/blog?category=Segurança" },
   { label: "Hardware", href: "/blog?category=Hardware" },
   { label: "Dicas", href: "/blog?category=Dicas" },
